@@ -442,7 +442,7 @@ export default function HomePage() {
                   src="/uploads/2026/06/Mens-Camel-Tan-Wool-Blazer-3.webp"
                   alt="Men's formal wear and evening embroidered suits"
                   loading="lazy"
-                  onError={(e) => { (e.target as HTMLImageElement).src = '/uploads/2026/06/Burgundy-Blazer-·-Silver-Art-Deco.webp'; }}
+                  onError={(e) => { (e.target as HTMLImageElement).src = '/uploads/2026/06/Burgundy-Blazer--Silver-Art-Deco.webp'; }}
                 />
                 <span className="category-num">03</span>
               </div>
