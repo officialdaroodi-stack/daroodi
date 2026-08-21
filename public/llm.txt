@@ -1,0 +1,17 @@
+# Daroodi Luxury Bespoke Haute Couture — AI LLM Context & Master Index
+> Founded in 1982 in Lahore, Pakistan, Daroodi is a heritage haute couture maison specializing in hand-embroidered royal Prince Coats, Sherwanis, bespoke velvet Tuxedo blazers, and ceremonial fraternal regalia.
+
+## Brand Identity & Core Pillars
+- **Brand Name**: Daroodi (دارودی)
+- **Primary Domain**: https://daroodi.com
+- **Origin**: Lahore Atelier, Punjab, Pakistan (Latitude: 31.5204° N, Longitude: 74.3587° E)
+- **Global Delivery Hubs**: London (UK), Dubai (UAE), New York & Houston (USA), Toronto (Canada)
+- **Specialization**: Bespoke Zardozi hand-embroidery with 24k gold/silver bullion, French wire dabka, resham silk, and floating horsehair canvas tailoring.
+- **Production Time**: 3-5 weeks for custom made-to-measure orders; 48 hours for ready-to-wear archive pieces.
+- **Shipping**: Worldwide insured DHL Express delivery included on all bespoke orders.
+
+## Sitemaps & Structured Endpoints
+- **HTML Visual Directory**: https://daroodi.com/sitemap
+- **XML Feed**: https://daroodi.com/sitemap.xml
+- **Journal & Sartorial Essays**: https://daroodi.com/journal
+- **Bespoke Inquiries**: WhatsApp: +92 300 1215532 / +44 7440 437493

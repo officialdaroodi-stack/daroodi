@@ -1,0 +1,957 @@
+/* ═══════════════════════════════════════════════════════════════════════════════
+   DAROODI LUXURY BESPOKE SINGLE PRODUCT — MASTER STYLES v8.0
+   ═══════════════════════════════════════════════════════════════════════════════ */
+
+:root {
+  --daroodi-green: #1B5E20;
+  --daroodi-green-dark: #09220B;
+  --daroodi-green-gradient: linear-gradient(135deg, #1B5E20 0%, #124316 50%, #09220B 100%);
+  --daroodi-gold: #C9A84C;
+  --daroodi-gold-light: #E8D5A8;
+  --daroodi-gold-glow: rgba(201, 168, 76, 0.35);
+  --daroodi-black: #0A0A0A;
+  --daroodi-off-white: #F8F6F3;
+  --daroodi-cream: #FAF8F5;
+  --daroodi-gray: #666666;
+  --daroodi-gray-light: #999999;
+  --daroodi-border: #E5E0D8;
+  --daroodi-shadow-sm: 0 4px 14px rgba(0, 0, 0, 0.05);
+  --daroodi-shadow-md: 0 10px 30px rgba(0, 0, 0, 0.08);
+  --daroodi-shadow-lg: 0 20px 50px rgba(9, 34, 11, 0.12);
+}
+
+/* ─── Ancestor Neutralization for Sticky Pinned Gallery ────────────────────── */
+@media (min-width: 993px) {
+  html,
+  body,
+  .storefront-shell,
+  main,
+  .daroodi-sp-wrapper,
+  .daroodi-sp-grid,
+  .daroodi-info-col {
+    overflow: visible !important;
+    overflow-y: visible !important;
+    transform: none !important;
+    filter: none !important;
+    perspective: none !important;
+    will-change: auto !important;
+  }
+
+  @supports (overflow: clip) {
+    html,
+    body,
+    .storefront-shell,
+    main {
+      overflow-x: clip !important;
+    }
+  }
+
+  .daroodi-sp-grid {
+    display: grid !important;
+    grid-template-columns: 46% 54% !important;
+    gap: 40px !important;
+    align-items: start !important;
+  }
+
+  .daroodi-gallery-col {
+    position: -webkit-sticky !important;
+    position: sticky !important;
+    top: 100px !important;
+    align-self: start !important;
+    height: fit-content !important;
+    z-index: 30 !important;
+  }
+}
+
+@media (max-width: 992px) {
+  .daroodi-sp-grid {
+    grid-template-columns: 1fr !important;
+    gap: 30px !important;
+  }
+
+  .daroodi-gallery-col {
+    position: relative !important;
+    top: auto !important;
+    z-index: 1 !important;
+  }
+}
+
+.daroodi-sp-wrapper {
+  max-width: 1280px !important;
+  margin: 30px auto 0 !important;
+  padding: 0 24px 80px !important;
+  box-sizing: border-box !important;
+  font-family: 'DM Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  color: var(--daroodi-black);
+}
+
+@media (max-width: 768px) {
+  .daroodi-sp-wrapper {
+    padding: 0 16px 80px !important;
+    margin-top: 16px !important;
+  }
+}
+
+/* Breadcrumb Navigation */
+.daroodi-breadcrumb {
+  font-size: 13px;
+  color: var(--daroodi-gray);
+  margin-bottom: 24px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+.daroodi-breadcrumb a {
+  color: var(--daroodi-gray);
+  text-decoration: none;
+  transition: color 0.2s;
+}
+.daroodi-breadcrumb a:hover {
+  color: var(--daroodi-green);
+}
+.daroodi-breadcrumb span.current {
+  color: var(--daroodi-black);
+  font-weight: 600;
+}
+
+/* Main Image Wrap (Fully framed on all 4 borders) */
+.daroodi-main-image-wrap {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 4 / 5;
+  border-radius: 18px;
+  background: var(--daroodi-cream);
+  overflow: hidden;
+  border: 1px solid var(--daroodi-border);
+  box-shadow: var(--daroodi-shadow-sm);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+}
+
+.daroodi-main-image-wrap img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.daroodi-main-image-wrap:hover img {
+  transform: scale(1.05);
+}
+
+.daroodi-sale-badge {
+  position: absolute;
+  top: 16px;
+  left: 16px;
+  background: var(--daroodi-green-dark);
+  color: var(--daroodi-gold);
+  border: 1px solid var(--daroodi-gold);
+  font-size: 11px;
+  font-weight: 700;
+  padding: 5px 12px;
+  border-radius: 50px;
+  z-index: 2;
+  letter-spacing: 0.6px;
+  text-transform: uppercase;
+}
+
+/* Thumbnails Strip */
+.daroodi-thumbnails {
+  display: flex;
+  gap: 12px;
+  margin-top: 14px;
+  overflow-x: auto;
+  padding-bottom: 4px;
+}
+
+.daroodi-thumb {
+  min-width: 76px;
+  width: 76px;
+  height: 100px;
+  border-radius: 10px;
+  overflow: hidden;
+  cursor: pointer;
+  border: 2px solid transparent;
+  transition: all 0.2s ease;
+  flex-shrink: 0;
+  background: var(--daroodi-cream);
+}
+
+.daroodi-thumb.active {
+  border-color: var(--daroodi-gold);
+  box-shadow: 0 0 0 2px var(--daroodi-gold-glow);
+  transform: translateY(-2px);
+}
+
+.daroodi-thumb img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* ─── RIGHT: Long Scrollable Details Section ──────────────────────────────── */
+.daroodi-info-col {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.daroodi-card {
+  background: #FFFFFF;
+  border: 1px solid var(--daroodi-border);
+  border-radius: 18px;
+  padding: 30px;
+  box-shadow: var(--daroodi-shadow-sm);
+  box-sizing: border-box;
+}
+
+@media (max-width: 600px) {
+  .daroodi-card {
+    padding: 20px 16px;
+  }
+}
+
+.daroodi-tier-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: var(--daroodi-green-dark);
+  color: var(--daroodi-gold);
+  padding: 4px 10px;
+  border-radius: 6px;
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  margin-bottom: 12px;
+}
+
+.daroodi-product-title {
+  font-family: 'Libre Baskerville', serif;
+  font-size: 30px;
+  font-weight: 700;
+  color: var(--daroodi-black);
+  line-height: 1.3;
+  margin: 0 0 10px;
+}
+
+@media (max-width: 600px) {
+  .daroodi-product-title {
+    font-size: 22px;
+  }
+}
+
+/* Rating Row */
+.daroodi-rating-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-bottom: 16px;
+}
+
+.daroodi-stars {
+  color: #D97706;
+  letter-spacing: 2px;
+  font-size: 15px;
+}
+
+.daroodi-review-count {
+  font-size: 13px;
+  color: var(--daroodi-gray);
+  font-weight: 500;
+}
+
+.daroodi-write-review {
+  font-size: 13px;
+  color: var(--daroodi-green);
+  font-weight: 700;
+  text-decoration: underline;
+  cursor: pointer;
+  margin-left: auto;
+}
+
+/* Price Row */
+.daroodi-price-row {
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-bottom: 18px;
+}
+
+.daroodi-current-price {
+  font-size: 32px;
+  font-weight: 800;
+  color: var(--daroodi-green-dark);
+}
+
+.daroodi-original-price {
+  font-size: 18px;
+  color: var(--daroodi-gray-light);
+  text-decoration: line-through;
+}
+
+.daroodi-save-badge {
+  background: #E8F5E9;
+  color: #1B5E20;
+  border: 1px solid #C8E6C9;
+  font-size: 11px;
+  font-weight: 700;
+  padding: 4px 10px;
+  border-radius: 50px;
+}
+
+/* Section Labels */
+.daroodi-section-label {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--daroodi-black);
+  margin-bottom: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.6px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+/* Pack Options */
+.daroodi-packs {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.daroodi-pack-item {
+  border: 1.5px solid var(--daroodi-border);
+  border-radius: 12px;
+  padding: 12px 16px;
+  cursor: pointer;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  transition: all 0.2s ease;
+  background: #FFFFFF;
+}
+
+.daroodi-pack-item.active {
+  border-color: var(--daroodi-green);
+  background: #F4F9F5;
+}
+
+.daroodi-pack-badge {
+  background: var(--daroodi-green-dark);
+  color: var(--daroodi-gold);
+  font-size: 11px;
+  font-weight: 700;
+  padding: 3px 8px;
+  border-radius: 6px;
+}
+
+/* Color Swatches */
+.daroodi-color-swatches {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+}
+
+.daroodi-swatch-box {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  cursor: pointer;
+}
+
+.daroodi-swatch {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  border: 2px solid #FFFFFF;
+  box-shadow: 0 0 0 1px var(--daroodi-border);
+  transition: all 0.2s ease;
+}
+
+.daroodi-swatch-box.active .daroodi-swatch {
+  box-shadow: 0 0 0 2px var(--daroodi-green), 0 0 8px rgba(27, 94, 32, 0.3);
+  transform: scale(1.1);
+}
+
+.daroodi-swatch-name {
+  font-size: 11px;
+  color: var(--daroodi-gray);
+  font-weight: 600;
+}
+
+/* Size Selector */
+.daroodi-sizes {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-bottom: 14px;
+}
+
+.daroodi-size-btn {
+  min-width: 48px;
+  height: 40px;
+  padding: 0 14px;
+  border: 1.5px solid var(--daroodi-border);
+  border-radius: 8px;
+  background: #FFFFFF;
+  font-weight: 700;
+  font-size: 13px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--daroodi-black);
+}
+
+.daroodi-size-btn.active {
+  border-color: var(--daroodi-green);
+  background: var(--daroodi-green-dark);
+  color: var(--daroodi-gold);
+}
+
+/* Action Buttons */
+.daroodi-action-row {
+  display: grid;
+  grid-template-columns: 1.6fr 1fr;
+  gap: 12px;
+  margin-top: 10px;
+  margin-bottom: 20px;
+}
+
+@media (max-width: 600px) {
+  .daroodi-action-row {
+    grid-template-columns: 1fr;
+  }
+}
+
+.daroodi-btn-cart {
+  background: var(--daroodi-green-gradient);
+  color: #FFFFFF;
+  padding: 14px 20px;
+  border-radius: 12px;
+  border: none;
+  font-weight: 700;
+  font-size: 15px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.daroodi-btn-wa {
+  background: #25D366;
+  color: #FFFFFF;
+  padding: 14px 18px;
+  border-radius: 12px;
+  border: none;
+  font-weight: 700;
+  font-size: 14px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  text-decoration: none;
+}
+
+/* Stylist Card */
+.daroodi-stylist-card {
+  background: #F4F9F5;
+  border: 1px solid #C8E6C9;
+  border-radius: 14px;
+  padding: 16px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-bottom: 20px;
+}
+
+.daroodi-stylist-avatar {
+  width: 46px;
+  height: 46px;
+  border-radius: 50%;
+  background: var(--daroodi-green-dark);
+  color: var(--daroodi-gold);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 16px;
+  flex-shrink: 0;
+  border: 2px solid var(--daroodi-gold);
+}
+
+/* Guarantees */
+.daroodi-guarantees {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+  text-align: center;
+  padding: 14px 0;
+  border-top: 1px solid var(--daroodi-border);
+  border-bottom: 1px solid var(--daroodi-border);
+  margin-bottom: 20px;
+}
+
+.daroodi-guarantee-item {
+  font-size: 11px;
+  color: var(--daroodi-gray);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  font-weight: 600;
+}
+
+/* ─── Product Accordions (Inside Details Column) ───────────────────────────── */
+.daroodi-accordion-wrap {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 10px;
+}
+
+.daroodi-acc-item {
+  border: 1px solid var(--daroodi-border);
+  border-radius: 12px;
+  overflow: hidden;
+  background: #FFFFFF;
+  transition: all 0.2s ease;
+}
+
+.daroodi-acc-item.open {
+  border-color: var(--daroodi-green);
+}
+
+.daroodi-acc-header {
+  width: 100%;
+  padding: 14px 18px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--daroodi-black);
+  text-align: left;
+}
+
+.daroodi-acc-header:hover {
+  background: var(--daroodi-cream);
+}
+
+.daroodi-acc-content {
+  padding: 0 18px 16px;
+  font-size: 13px;
+  line-height: 1.6;
+  color: var(--daroodi-gray);
+  border-top: 1px solid #F0ECE4;
+  background: #FAFAFA;
+}
+
+/* ─── Bottom Sections — 4 Cards on Desktop, 2 Cards on Mobile ─────────────── */
+.daroodi-section-block {
+  margin-top: 70px;
+}
+
+.daroodi-4col-grid {
+  display: grid !important;
+  grid-template-columns: repeat(4, 1fr) !important;
+  gap: 20px !important;
+  margin-top: 24px !important;
+}
+
+@media (max-width: 1024px) {
+  .daroodi-4col-grid {
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 16px !important;
+  }
+}
+
+@media (max-width: 768px) {
+  .daroodi-4col-grid {
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 12px !important;
+  }
+}
+
+/* Best Deal Card with Glow Fire Badge */
+.daroodi-deal-card {
+  border: 1px solid rgba(201, 168, 76, 0.35);
+  border-radius: 16px;
+  overflow: hidden;
+  background: linear-gradient(180deg, #FFFFFF 0%, #FDFCF9 100%);
+  text-decoration: none;
+  color: inherit;
+  transition: all 0.3s ease;
+  position: relative;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.03);
+  display: flex;
+  flex-direction: column;
+}
+
+.daroodi-deal-card:hover {
+  transform: translateY(-6px);
+  border-color: var(--daroodi-gold);
+  box-shadow: 0 10px 30px rgba(201, 168, 76, 0.2);
+}
+
+.daroodi-deal-img-wrap {
+  position: relative;
+  aspect-ratio: 3 / 4;
+  overflow: hidden;
+  background: var(--daroodi-cream);
+}
+
+.daroodi-deal-img-wrap img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.4s ease;
+}
+
+.daroodi-deal-card:hover .daroodi-deal-img-wrap img {
+  transform: scale(1.06);
+}
+
+.daroodi-hot-badge {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background: var(--daroodi-green-dark);
+  color: var(--daroodi-gold);
+  font-size: 10px;
+  font-weight: 800;
+  text-transform: uppercase;
+  padding: 4px 8px;
+  border-radius: 50px;
+  border: 1px solid var(--daroodi-gold);
+  z-index: 2;
+}
+
+.daroodi-deal-body {
+  padding: 14px 16px 18px;
+  text-align: center;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.daroodi-deal-title {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--daroodi-black);
+  margin: 0 0 8px;
+  line-height: 1.35;
+}
+
+.daroodi-deal-price {
+  font-size: 17px;
+  font-weight: 800;
+  color: var(--daroodi-green-dark);
+}
+
+/* ─── Exact Single Product Mobile Sticky Pill Bar & Submenus from WooCommerce ─ */
+.daroodi-mobile-bar {
+  display: none;
+  position: fixed;
+  bottom: 20px !important;
+  left: 16px !important;
+  right: 16px !important;
+  z-index: 10000 !important;
+  background: rgba(255, 255, 255, 0.94) !important;
+  backdrop-filter: blur(16px) !important;
+  -webkit-backdrop-filter: blur(16px) !important;
+  border: 1px solid rgba(201, 169, 110, 0.25) !important;
+  border-radius: 30px !important;
+  padding: 8px 12px !important;
+  box-shadow: 0 10px 30px rgba(27, 94, 32, 0.12), 0 1px 8px rgba(0, 0, 0, 0.04) !important;
+  box-sizing: border-box !important;
+  transform: translateZ(0) !important;
+}
+
+@media (max-width: 768px) {
+  .daroodi-mobile-bar {
+    display: block !important;
+  }
+}
+
+@media (min-width: 769px) {
+  .daroodi-mobile-bar,
+  #daroodi-mobile-bar {
+    display: none !important;
+  }
+}
+
+.daroodi-mobile-bar-row {
+  display: grid !important;
+  grid-template-columns: 46px 46px minmax(0, 1fr) !important;
+  gap: 6px !important;
+  width: 100% !important;
+  align-items: center !important;
+}
+
+.daroodi-mobile-tile {
+  border: none !important;
+  background: transparent !important;
+  text-decoration: none !important;
+  display: flex !important;
+  flex-direction: column !important;
+  justify-content: center !important;
+  align-items: center !important;
+  gap: 3px !important;
+  height: 44px !important;
+  font-weight: 700 !important;
+  font-size: 9px !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.5px !important;
+  width: 100% !important;
+  cursor: pointer !important;
+  transition: transform 0.2s ease, opacity 0.2s ease !important;
+}
+
+.daroodi-mobile-tile:active {
+  transform: scale(0.9) !important;
+  opacity: 0.8 !important;
+}
+
+.daroodi-mobile-tile svg {
+  width: 20px !important;
+  height: 20px !important;
+  display: block !important;
+}
+
+.daroodi-mobile-chat-tile {
+  color: #1B5E20 !important;
+}
+
+.daroodi-mobile-share-tile {
+  color: var(--daroodi-gold) !important;
+}
+
+/* Chat Submenu */
+.daroodi-chat-submenu {
+  display: none;
+  position: absolute !important;
+  bottom: calc(100% + 12px) !important;
+  left: 12px !important;
+  background: rgba(255, 255, 255, 0.95) !important;
+  backdrop-filter: blur(16px) !important;
+  -webkit-backdrop-filter: blur(16px) !important;
+  border: 1px solid rgba(201, 169, 110, 0.25) !important;
+  border-radius: 30px !important;
+  padding: 6px 8px !important;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15) !important;
+  z-index: 10002 !important;
+  flex-direction: row !important;
+  gap: 6px !important;
+  box-sizing: border-box !important;
+  transform: translateY(10px) !important;
+  opacity: 0 !important;
+  transition: opacity 0.22s cubic-bezier(0.25, 1, 0.5, 1), transform 0.22s cubic-bezier(0.25, 1, 0.5, 1) !important;
+}
+
+.daroodi-chat-submenu.show {
+  display: flex !important;
+  opacity: 1 !important;
+  transform: translateY(0) !important;
+}
+
+/* Share Submenu */
+.daroodi-share-submenu {
+  display: none;
+  position: absolute !important;
+  bottom: calc(100% + 12px) !important;
+  left: 12px !important;
+  background: rgba(255, 255, 255, 0.95) !important;
+  backdrop-filter: blur(16px) !important;
+  -webkit-backdrop-filter: blur(16px) !important;
+  border: 1px solid rgba(201, 169, 110, 0.25) !important;
+  border-radius: 30px !important;
+  padding: 6px 8px !important;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15) !important;
+  z-index: 10002 !important;
+  flex-direction: row !important;
+  gap: 6px !important;
+  box-sizing: border-box !important;
+  transform: translateY(10px) !important;
+  opacity: 0 !important;
+  transition: opacity 0.22s cubic-bezier(0.25, 1, 0.5, 1), transform 0.22s cubic-bezier(0.25, 1, 0.5, 1) !important;
+}
+
+.daroodi-share-submenu.show {
+  display: flex !important;
+  opacity: 1 !important;
+  transform: translateY(0) !important;
+}
+
+.daroodi-submenu-btn {
+  display: flex !important;
+  align-items: center !important;
+  gap: 6px !important;
+  padding: 8px 12px !important;
+  font-size: 10px !important;
+  font-weight: 800 !important;
+  text-transform: uppercase !important;
+  text-decoration: none !important;
+  color: #ffffff !important;
+  border-radius: 20px !important;
+  box-sizing: border-box !important;
+  transition: all 0.2s ease !important;
+  justify-content: center !important;
+}
+
+.daroodi-submenu-btn:active {
+  transform: scale(0.96) !important;
+}
+
+.daroodi-submenu-btn.daroodi-submenu-wa {
+  background: linear-gradient(135deg, var(--daroodi-green), var(--daroodi-green-dark)) !important;
+}
+
+.daroodi-submenu-btn.daroodi-submenu-call {
+  background: linear-gradient(135deg, var(--daroodi-green), var(--daroodi-green-dark)) !important;
+}
+
+/* Individual Share Buttons */
+.daroodi-share-btn {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  width: 32px !important;
+  height: 32px !important;
+  border-radius: 50% !important;
+  border: none !important;
+  color: #ffffff !important;
+  cursor: pointer !important;
+  transition: all 0.2s ease !important;
+  padding: 0 !important;
+  text-decoration: none !important;
+}
+
+.daroodi-share-btn:active {
+  transform: scale(0.9) !important;
+}
+
+.daroodi-share-btn.daroodi-share-wa { background: #25D366 !important; }
+.daroodi-share-btn.daroodi-share-fb { background: #1877F2 !important; }
+.daroodi-share-btn.daroodi-share-tw { background: #000000 !important; }
+.daroodi-share-btn.daroodi-share-pin { background: #E60023 !important; }
+.daroodi-share-btn.daroodi-share-link { background: var(--daroodi-gold) !important; }
+
+/* Slanted Seamless CTA Group */
+.daroodi-mobile-cta-group {
+  display: grid !important;
+  grid-template-columns: 1.2fr 0.8fr !important;
+  gap: 0 !important;
+  width: 100% !important;
+  padding: 0 !important;
+}
+
+.daroodi-mobile-btn-custom-cta,
+.daroodi-mobile-btn-cart-cta {
+  padding: 0 14px !important;
+  font-size: 12px !important;
+  font-weight: 800 !important;
+  text-transform: uppercase !important;
+  border: none !important;
+  cursor: pointer !important;
+  height: 44px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+  line-height: 44px !important;
+  letter-spacing: 0.5px !important;
+  min-width: 0 !important;
+  position: relative !important;
+  overflow: hidden !important;
+  width: 100% !important;
+  white-space: nowrap !important;
+  border-radius: 0 !important;
+  transform: skewX(-20deg) !important;
+  box-sizing: border-box !important;
+  text-decoration: none !important;
+}
+
+.daroodi-mobile-btn-custom-cta span,
+.daroodi-mobile-btn-cart-cta span {
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 4px !important;
+  transform: skewX(20deg) !important;
+}
+
+.daroodi-mobile-btn-custom-cta:active,
+.daroodi-mobile-btn-cart-cta:active {
+  transform: skewX(-20deg) scale(0.97) !important;
+}
+
+.daroodi-mobile-btn-custom-cta {
+  background: linear-gradient(135deg, var(--daroodi-green), var(--daroodi-green-dark)) !important;
+  color: #ffffff !important;
+}
+
+.daroodi-mobile-btn-cart-cta {
+  background: linear-gradient(135deg, var(--daroodi-gold), var(--daroodi-gold-light)) !important;
+  color: #09220B !important;
+}
+
+.daroodi-mobile-btn-cart-cta::after {
+  content: '' !important;
+  position: absolute !important;
+  top: 0 !important;
+  left: -150% !important;
+  width: 100% !important;
+  height: 100% !important;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.35), transparent) !important;
+  animation: daroodiMobileShine 3s infinite !important;
+}
+
+.daroodi-mobile-btn-custom-cta::after {
+  content: '' !important;
+  position: absolute !important;
+  top: 0 !important;
+  left: -150% !important;
+  width: 100% !important;
+  height: 100% !important;
+  background: linear-gradient(90deg, transparent, rgba(172, 255, 172, 0.45), transparent) !important;
+  animation: daroodiMobileShine 3s infinite !important;
+}
+
+@keyframes daroodiMobileShine {
+  0% { left: -150%; }
+  50% { left: 150%; }
+  100% { left: 150%; }
+}
+
+@media (max-width: 400px) {
+  .daroodi-mobile-bar-row {
+    grid-template-columns: 40px 40px minmax(0, 1fr) !important;
+    gap: 4px !important;
+  }
+  .daroodi-mobile-tile {
+    font-size: 8px !important;
+    gap: 2px !important;
+  }
+  .daroodi-mobile-btn-custom-cta,
+  .daroodi-mobile-btn-cart-cta {
+    font-size: 11px !important;
+    padding: 0 8px !important;
+  }
+}
