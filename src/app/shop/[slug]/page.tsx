@@ -21,7 +21,7 @@ import {
   Share2,
 } from 'lucide-react';
 
-const FALLBACK_IMAGE = 'https://daroodi.com/wp-content/uploads/2026/06/Mens-Premium-Prince-Coat-4.webp';
+const FALLBACK_IMAGE = '/uploads/2026/06/Mens-Premium-Prince-Coat-4.webp';
 
 export default function SingleProductPage() {
   const params = useParams();
@@ -31,6 +31,12 @@ export default function SingleProductPage() {
   const product = INITIAL_PRODUCTS.find((p) => p.slug === slug) || INITIAL_PRODUCTS[0];
 
   const [activeImage, setActiveImage] = useState(product.featured_image_url || FALLBACK_IMAGE);
+
+  React.useEffect(() => {
+    if (product?.featured_image_url) {
+      setActiveImage(product.featured_image_url);
+    }
+  }, [product]);
   const [selectedSize, setSelectedSize] = useState<string>('M');
   const [selectedColor, setSelectedColor] = useState<string>(
     product.acf_meta?.product_colors?.[0]?.name || 'Imperial Emerald'
