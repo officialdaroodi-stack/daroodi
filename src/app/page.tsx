@@ -409,61 +409,61 @@ export default function HomePage() {
             <Link href="/shop" className="category-card">
               <div className="category-img-wrap">
                 <img
-                  src="/uploads/2026/06/Mens-Slate-Blue-Double-Breasted-Overcoat-3.webp"
-                  alt="Luxury embroidered overcoats and longline formal outerwear"
+                  src="/uploads/2026/06/Mens-Premium-Prince-Coat-4.webp"
+                  alt="Men's embroidered prince coats and bespoke outerwear"
                   loading="lazy"
-                  onError={(e) => { (e.target as HTMLImageElement).src = '/uploads/2026/06/Black-Wool-Blend-Tailored-Blazer-7.webp'; }}
+                  onError={(e) => { (e.target as HTMLImageElement).src = '/uploads/2026/05/hero-coat.jpg'; }}
                 />
                 <span className="category-num">01</span>
               </div>
               <div className="category-body">
-                <h3>Outerwear &amp; Coats</h3>
-                <span>Shop coats →</span>
+                <h3>Men&apos;s Collection</h3>
+                <span>Prince coats, tuxedo jackets &amp; sherwanis →</span>
               </div>
             </Link>
             <Link href="/shop" className="category-card">
               <div className="category-img-wrap">
                 <img
-                  src="/uploads/2026/06/Black-Wool-Blend-Tailored-Blazer-11.webp"
-                  alt="Embroidered blazers and tailored jackets for men and women"
+                  src="/uploads/2026/06/Womens-Burgundy-Wool-Blazer-4.webp"
+                  alt="Women's embroidered blazers and tailored jackets"
                   loading="lazy"
-                  onError={(e) => { (e.target as HTMLImageElement).src = '/uploads/2026/06/Black-Wool-Blend-Tailored-Blazer.webp'; }}
+                  onError={(e) => { (e.target as HTMLImageElement).src = '/uploads/2026/05/womens-coat-1.jpg'; }}
                 />
                 <span className="category-num">02</span>
               </div>
               <div className="category-body">
-                <h3>Embroidered Blazers</h3>
-                <span>Shop blazers →</span>
+                <h3>Women&apos;s Collection</h3>
+                <span>Tailored blazers, cape coats &amp; suits →</span>
               </div>
             </Link>
-            <Link href="/shop" className="category-card">
+            <Link href="/collections#platinum" className="category-card">
               <div className="category-img-wrap">
                 <img
-                  src="/uploads/2026/06/Mens-Camel-Tan-Wool-Blazer-3.webp"
-                  alt="Men's formal wear and evening embroidered suits"
+                  src="/uploads/2026/06/Premium-Taupe-Longline-Embroidered-Tuxedo-Coat-3.webp"
+                  alt="Platinum bespoke ceremonial and wedding coats"
                   loading="lazy"
-                  onError={(e) => { (e.target as HTMLImageElement).src = '/uploads/2026/06/Burgundy-Blazer--Silver-Art-Deco.webp'; }}
+                  onError={(e) => { (e.target as HTMLImageElement).src = '/uploads/2026/06/Mens-Premium-Prince-Coat-4.webp'; }}
                 />
                 <span className="category-num">03</span>
               </div>
               <div className="category-body">
-                <h3>Men&apos;s Formal</h3>
-                <span>Shop men&apos;s →</span>
+                <h3>Ceremonial &amp; Wedding</h3>
+                <span>Heirloom statement pieces for grooms &amp; hosts →</span>
               </div>
             </Link>
-            <Link href="/shop" className="category-card">
+            <Link href="/custom-order" className="category-card">
               <div className="category-img-wrap">
                 <img
-                  src="/uploads/2026/06/Womens-Antique-Ivory-Silk-Velvet-Gown-Coat-4.webp"
-                  alt="Women's couture coats and embroidered evening wear"
+                  src="/uploads/2026/06/Black-Wool-Blend-Tailored-Blazer-11.webp"
+                  alt="Bespoke custom tailoring service"
                   loading="lazy"
-                  onError={(e) => { (e.target as HTMLImageElement).src = '/uploads/2026/05/womens-coat-1.jpg'; }}
+                  onError={(e) => { (e.target as HTMLImageElement).src = '/uploads/2026/06/Black-Wool-Blend-Tailored-Blazer.webp'; }}
                 />
                 <span className="category-num">04</span>
               </div>
               <div className="category-body">
-                <h3>Women&apos;s Couture</h3>
-                <span>Shop women&apos;s →</span>
+                <h3>Bespoke Custom</h3>
+                <span>Choose your fabric, thread colors &amp; custom sizing →</span>
               </div>
             </Link>
           </div>
@@ -495,22 +495,22 @@ export default function HomePage() {
           <div className="craft-visual">
             <div className="craft-image-stack craft-stack-desktop">
               <img
-                src="/uploads/2026/06/Ivory-White-Linen-Tailored-Blazer-4.webp"
-                alt="Ivory linen blazer with floral sleeve embroidery"
+                src="/uploads/2026/06/Mens-Premium-Prince-Coat-4.webp"
+                alt="Gold thread hand embroidery on velvet prince coat"
                 className="stack-img stack-1"
                 loading="lazy"
-                onError={(e) => { (e.target as HTMLImageElement).src = '/uploads/2026/06/Black-Blazer-3.webp'; }}
+                onError={(e) => { (e.target as HTMLImageElement).src = '/uploads/2026/05/hero-coat.jpg'; }}
               />
               <img
-                src="/uploads/2026/06/Mens-Warm-Taupe-Silk-Velvet-Blazer-3.webp"
-                alt="Taupe silk velvet blazer with silver thread lapels"
+                src="/uploads/2026/06/Womens-Burgundy-Wool-Blazer-4.webp"
+                alt="Artisan hand-stitching botanical motifs on wool blazer"
                 className="stack-img stack-2"
                 loading="lazy"
-                onError={(e) => { (e.target as HTMLImageElement).src = '/uploads/2026/06/Burgundy-Velvet-Tuxedo-Jacket.webp'; }}
+                onError={(e) => { (e.target as HTMLImageElement).src = '/uploads/2026/05/womens-coat-1.jpg'; }}
               />
               <img
-                src="/uploads/2026/06/Premium-Chocolate-Brown-Embellished-Tuxedo-Blazer-3.webp"
-                alt="Chocolate brown embellished tuxedo blazer"
+                src="/uploads/2026/06/Black-Brocade-Tuxedo-Jacket-3.webp"
+                alt="Finished bespoke brocade tuxedo coat on tailor mannequin"
                 className="stack-img stack-3"
                 loading="lazy"
                 onError={(e) => { (e.target as HTMLImageElement).src = '/uploads/2026/06/Black-Brocade-Tuxedo-Jacket.webp'; }}
@@ -519,30 +519,30 @@ export default function HomePage() {
             <div className="craft-scroll-gallery" aria-label="Craftsmanship gallery">
               <figure className="craft-slide craft-slide-1">
                 <img
-                  src="/uploads/2026/06/Ivory-White-Linen-Tailored-Blazer-4.webp"
-                  alt="Ivory linen blazer with floral embroidery"
+                  src="/uploads/2026/06/Mens-Premium-Prince-Coat-4.webp"
+                  alt="100% Hand Embroidery"
                   loading="lazy"
-                  onError={(e) => { (e.target as HTMLImageElement).src = '/uploads/2026/06/Black-Blazer-3.webp'; }}
+                  onError={(e) => { (e.target as HTMLImageElement).src = '/uploads/2026/05/hero-coat.jpg'; }}
                 />
-                <figcaption>Hand-embroidered linen</figcaption>
+                <figcaption>100% Hand Embroidery</figcaption>
               </figure>
               <figure className="craft-slide craft-slide-2">
                 <img
-                  src="/uploads/2026/06/Mens-Warm-Taupe-Silk-Velvet-Blazer-3.webp"
-                  alt="Taupe silk velvet blazer"
+                  src="/uploads/2026/06/Womens-Burgundy-Wool-Blazer-4.webp"
+                  alt="Master Atelier Stitching"
                   loading="lazy"
-                  onError={(e) => { (e.target as HTMLImageElement).src = '/uploads/2026/06/Burgundy-Velvet-Tuxedo-Jacket.webp'; }}
+                  onError={(e) => { (e.target as HTMLImageElement).src = '/uploads/2026/05/womens-coat-1.jpg'; }}
                 />
-                <figcaption>Silk velvet tailoring</figcaption>
+                <figcaption>Master Atelier Stitching</figcaption>
               </figure>
               <figure className="craft-slide craft-slide-3">
                 <img
-                  src="/uploads/2026/06/Premium-Chocolate-Brown-Embellished-Tuxedo-Blazer-3.webp"
-                  alt="Chocolate brown tuxedo blazer"
+                  src="/uploads/2026/06/Black-Brocade-Tuxedo-Jacket-3.webp"
+                  alt="Bespoke Tailoring"
                   loading="lazy"
                   onError={(e) => { (e.target as HTMLImageElement).src = '/uploads/2026/06/Black-Brocade-Tuxedo-Jacket.webp'; }}
                 />
-                <figcaption>Embellished formalwear</figcaption>
+                <figcaption>Bespoke Tailoring</figcaption>
               </figure>
             </div>
           </div>
