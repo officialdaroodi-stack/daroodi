@@ -26,6 +26,9 @@ export default function ShopPage() {
   const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
 
+  // Mobile Filter Drawer Toggle
+  const [mobileFilterOpen, setMobileFilterOpen] = useState(false);
+
   // Filters State
   const [selectedCategory, setSelectedCategory] = useState<string>('all');
   const [inStockOnly, setInStockOnly] = useState<boolean>(false);
@@ -34,6 +37,13 @@ export default function ShopPage() {
   const [maxPrice, setMaxPrice] = useState<number>(3000);
   const [sortBy, setSortBy] = useState<string>('newest');
   const [gridCols, setGridCols] = useState<3 | 4>(4);
+
+  // Active filters count
+  const activeFilterCount =
+    (selectedCategory !== 'all' ? 1 : 0) +
+    (inStockOnly ? 1 : 0) +
+    (onSaleOnly ? 1 : 0) +
+    (minPrice > 0 || maxPrice < 3000 ? 1 : 0);
 
   // Quick View Modal
   const [quickProduct, setQuickProduct] = useState<Product | null>(null);
@@ -136,11 +146,66 @@ export default function ShopPage() {
           </div>
         </div>
 
+        {/* ─── Mobile Filter & Tab Toggle Button (Mobile/Tablet View Only) ─── */}
+        <div className="shop-mobile-action-bar">
+          <button
+            type="button"
+            className={`shop-mobile-filter-toggle-btn ${mobileFilterOpen ? 'active' : ''}`}
+            onClick={() => setMobileFilterOpen((prev) => !prev)}
+            aria-expanded={mobileFilterOpen}
+          >
+            <div className="filter-toggle-inner">
+              <Filter size={16} />
+              <span>{mobileFilterOpen ? 'Hide Filters & Categories' : 'Filter & Categories'}</span>
+              {activeFilterCount > 0 && (
+                <span className="filter-count-badge">{activeFilterCount}</span>
+              )}
+            </div>
+            <span className="filter-toggle-arrow">{mobileFilterOpen ? '▲' : '▼'}</span>
+          </button>
+        </div>
+
         {/* ─── 12-Column Grid Layout ──────────────────────────────── */}
         <div className="shop-layout-grid">
           
           {/* ─── Left Sidebar Filters ─────────────────────────────── */}
-          <aside className="shop-sidebar">
+          <aside className={`shop-sidebar ${mobileFilterOpen ? 'is-open' : ''}`}>
+            
+            {/* Mobile-Only Header inside drawer */}
+            <div className="shop-sidebar-mobile-header">
+              <div className="mobile-header-title">
+                <Filter size={15} color="var(--daroodi-gold)" />
+                <span>Filters &amp; Categories</span>
+                {activeFilterCount > 0 && (
+                  <span className="filter-count-badge">{activeFilterCount}</span>
+                )}
+              </div>
+              <div className="mobile-header-actions">
+                {activeFilterCount > 0 && (
+                  <button
+                    type="button"
+                    className="shop-reset-filters-btn"
+                    onClick={() => {
+                      setSelectedCategory('all');
+                      setInStockOnly(false);
+                      setOnSaleOnly(false);
+                      setMinPrice(0);
+                      setMaxPrice(3000);
+                    }}
+                  >
+                    Reset
+                  </button>
+                )}
+                <button
+                  type="button"
+                  className="shop-sidebar-close-btn"
+                  onClick={() => setMobileFilterOpen(false)}
+                  aria-label="Close filters"
+                >
+                  <X size={18} />
+                </button>
+              </div>
+            </div>
             
             {/* Categories */}
             <div className="shop-filter-card">
@@ -153,7 +218,9 @@ export default function ShopPage() {
                   <div
                     key={cat.id}
                     className={`shop-category-link ${selectedCategory === cat.id ? 'active' : ''}`}
-                    onClick={() => setSelectedCategory(cat.id)}
+                    onClick={() => {
+                      setSelectedCategory(cat.id);
+                    }}
                   >
                     <span>{cat.name}</span>
                     <span className="shop-category-count">{cat.count}</span>
@@ -224,7 +291,7 @@ export default function ShopPage() {
               </div>
               <button
                 type="button"
-                onClick={() => alert('Price filters applied!')}
+                onClick={() => setMobileFilterOpen(false)}
                 style={{ marginTop: '14px', width: '100%', padding: '8px', borderRadius: '12px', background: 'var(--daroodi-green-dark)', color: '#FFFFFF', fontSize: '12px', fontWeight: 700, border: 'none', cursor: 'pointer' }}
               >
                 Apply Range
@@ -243,6 +310,17 @@ export default function ShopPage() {
                 onClick={() => alert('Welcome to the Daroodi VIP Circle!')}
               >
                 Join Now
+              </button>
+            </div>
+
+            {/* Mobile Apply Button */}
+            <div className="shop-sidebar-mobile-apply">
+              <button
+                type="button"
+                className="shop-mobile-apply-btn"
+                onClick={() => setMobileFilterOpen(false)}
+              >
+                View {filteredProducts.length} Results
               </button>
             </div>
 

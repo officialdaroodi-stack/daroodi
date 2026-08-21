@@ -469,3 +469,193 @@
   transform: translateY(-2px);
   box-shadow: 0 4px 12px rgba(201, 168, 76, 0.4);
 }
+
+/* ─── Mobile Action Bar & Filter Toggle ───────────────────────── */
+.shop-mobile-action-bar {
+  display: none;
+  margin-bottom: 20px;
+}
+
+.shop-mobile-filter-toggle-btn {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  padding: 14px 20px;
+  background: #FFFFFF;
+  border: 1.5px solid var(--daroodi-gold);
+  border-radius: 16px;
+  color: #162923;
+  font-family: inherit;
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+  box-shadow: 0 4px 14px rgba(22, 41, 35, 0.06);
+  transition: all 0.25s ease;
+}
+
+.shop-mobile-filter-toggle-btn:hover,
+.shop-mobile-filter-toggle-btn.active {
+  background: #162923;
+  color: #FFFFFF;
+  border-color: #162923;
+  box-shadow: 0 6px 20px rgba(22, 41, 35, 0.18);
+}
+
+.filter-toggle-inner {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.filter-count-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  height: 20px;
+  background: var(--daroodi-gold);
+  color: #162923;
+  font-size: 11px;
+  font-weight: 800;
+  border-radius: 50%;
+}
+
+.filter-toggle-arrow {
+  font-size: 11px;
+  opacity: 0.7;
+  transition: transform 0.2s ease;
+}
+
+/* ─── Mobile Sidebar Header & Apply Button ──────────────────────── */
+.shop-sidebar-mobile-header {
+  display: none;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 18px;
+  background: #162923;
+  border-radius: 16px;
+  color: #FFFFFF;
+  margin-bottom: 4px;
+}
+
+.mobile-header-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.8px;
+  text-transform: uppercase;
+  color: #FFFFFF;
+}
+
+.mobile-header-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.shop-reset-filters-btn {
+  background: rgba(201, 168, 76, 0.18);
+  border: 1px solid var(--daroodi-gold);
+  color: var(--daroodi-gold);
+  font-size: 11px;
+  font-weight: 700;
+  padding: 4px 10px;
+  border-radius: 20px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.shop-reset-filters-btn:hover {
+  background: var(--daroodi-gold);
+  color: #162923;
+}
+
+.shop-sidebar-close-btn {
+  background: rgba(255, 255, 255, 0.1);
+  border: none;
+  color: #FFFFFF;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.shop-sidebar-close-btn:hover {
+  background: rgba(255, 255, 255, 0.25);
+}
+
+.shop-sidebar-mobile-apply {
+  display: none;
+  margin-top: 8px;
+}
+
+.shop-mobile-apply-btn {
+  width: 100%;
+  padding: 14px 20px;
+  background: linear-gradient(135deg, var(--daroodi-gold), var(--daroodi-gold-light));
+  color: #162923;
+  border: none;
+  border-radius: 14px;
+  font-size: 13px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  cursor: pointer;
+  box-shadow: 0 4px 14px rgba(201, 168, 76, 0.35);
+  transition: all 0.2s ease;
+}
+
+.shop-mobile-apply-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(201, 168, 76, 0.5);
+}
+
+/* ─── Responsive Media Queries ──────────────────────────────────── */
+@media (max-width: 992px) {
+  .shop-mobile-action-bar {
+    display: flex;
+  }
+
+  .shop-sidebar {
+    display: none;
+    position: static;
+    background: #FAF8F5;
+    border: 1px solid var(--daroodi-border);
+    border-radius: 20px;
+    padding: 16px;
+    margin-bottom: 24px;
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.05);
+  }
+
+  .shop-sidebar.is-open {
+    display: flex;
+    animation: shopFilterSlideDown 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  }
+
+  .shop-sidebar-mobile-header {
+    display: flex;
+  }
+
+  .shop-sidebar-mobile-apply {
+    display: block;
+  }
+}
+
+@keyframes shopFilterSlideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
