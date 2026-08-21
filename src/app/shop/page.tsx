@@ -52,23 +52,27 @@ export default function ShopPage() {
   }, []);
 
   const categories = [
-    { id: 'all', name: 'All Products', count: products.length },
-    { id: 'prince-coat', name: 'Prince Coats', count: products.filter(p => p.title.toLowerCase().includes('prince') || p.title.toLowerCase().includes('coat')).length || 2 },
-    { id: 'sherwani', name: 'Sherwanis', count: products.filter(p => p.title.toLowerCase().includes('sherwani') || p.title.toLowerCase().includes('tuxedo')).length || 2 },
-    { id: 'blazer', name: 'Blazers & Jackets', count: products.filter(p => p.title.toLowerCase().includes('blazer')).length || 3 },
-    { id: 'waistcoat', name: 'Waistcoats & Layering', count: products.filter(p => p.title.toLowerCase().includes('suit') || p.title.toLowerCase().includes('coat')).length || 1 },
+    { id: 'all', name: 'All Masterpieces', count: products.length },
+    { id: 'overcoat', name: 'Overcoats & Dusters', count: products.filter(p => p.title.toLowerCase().includes('duster') || p.title.toLowerCase().includes('gown') || p.title.toLowerCase().includes('opera') || p.title.toLowerCase().includes('overcoat')).length },
+    { id: 'prince-coat', name: 'Prince Coats', count: products.filter(p => p.title.toLowerCase().includes('prince')).length },
+    { id: 'blazer', name: 'Embroidered Blazers', count: products.filter(p => p.title.toLowerCase().includes('blazer') || p.title.toLowerCase().includes('jacket') || p.title.toLowerCase().includes('boucle')).length },
+    { id: 'tuxedo', name: 'Tuxedos & Formal Suits', count: products.filter(p => p.title.toLowerCase().includes('tuxedo') || p.title.toLowerCase().includes('suit')).length },
+    { id: 'regalia', name: 'Ceremonial Regalia', count: products.filter(p => p.title.toLowerCase().includes('regalia') || p.title.toLowerCase().includes('robe') || p.title.toLowerCase().includes('collar')).length || 1 },
   ];
 
   const filteredProducts = products.filter((prod) => {
     // Category match
-    if (selectedCategory === 'prince-coat') {
-      if (!prod.title.toLowerCase().includes('prince') && !prod.title.toLowerCase().includes('coat')) return false;
-    } else if (selectedCategory === 'sherwani') {
-      if (!prod.title.toLowerCase().includes('sherwani') && !prod.title.toLowerCase().includes('tuxedo')) return false;
+    const titleL = prod.title.toLowerCase();
+    if (selectedCategory === 'overcoat') {
+      if (!titleL.includes('duster') && !titleL.includes('gown') && !titleL.includes('opera') && !titleL.includes('overcoat')) return false;
+    } else if (selectedCategory === 'prince-coat') {
+      if (!titleL.includes('prince')) return false;
     } else if (selectedCategory === 'blazer') {
-      if (!prod.title.toLowerCase().includes('blazer')) return false;
-    } else if (selectedCategory === 'waistcoat') {
-      if (!prod.title.toLowerCase().includes('suit') && !prod.title.toLowerCase().includes('coat')) return false;
+      if (!titleL.includes('blazer') && !titleL.includes('jacket') && !titleL.includes('boucle')) return false;
+    } else if (selectedCategory === 'tuxedo') {
+      if (!titleL.includes('tuxedo') && !titleL.includes('suit')) return false;
+    } else if (selectedCategory === 'regalia') {
+      if (!titleL.includes('regalia') && !titleL.includes('robe') && !titleL.includes('collar')) return false;
     }
 
     // Availability
