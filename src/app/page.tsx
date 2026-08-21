@@ -5,60 +5,60 @@ import Link from 'next/link';
 
 const PRODUCTS = [
   {
-    name: "Men's Imperial Gold Velvet Prince Coat",
-    price: '£1,450',
-    image: '/uploads/2026/05/hero-coat.jpg',
-    link: '/shop/mens-premium-velvet-prince-coat',
-    tier: 'Platinum',
-  },
-  {
-    name: 'Burgundy Art Deco Silver Embroidered Blazer',
-    price: '£1,150',
-    image: '/uploads/2026/06/Burgundy-Blazer-·-Silver-Art-Deco.webp',
-    link: '/shop/burgundy-art-deco-silver-embroidered-blazer',
-    tier: 'Gold',
-  },
-  {
-    name: 'Black Silk Brocade Royal Tuxedo Jacket',
-    price: '£850',
-    image: '/uploads/2026/06/Black-Brocade-Tuxedo-Jacket.webp',
-    link: '/shop/black-brocade-tuxedo-jacket',
-    tier: 'Silver',
-  },
-  {
-    name: 'Black Wool-Blend Tailored Statement Blazer',
-    price: '£550',
-    image: '/uploads/2026/06/Black-Wool-Blend-Tailored-Blazer.webp',
-    link: '/shop/black-wool-blend-tailored-blazer',
-    tier: 'Essentials',
-  },
-  {
-    name: 'Burgundy Imperial Velvet Tuxedo Jacket',
+    name: 'Taupe Longline Embroidered Tuxedo Coat',
     price: '£1,250',
-    image: '/uploads/2026/06/Burgundy-Velvet-Tuxedo-Jacket.webp',
-    link: '/shop/burgundy-velvet-tuxedo-jacket',
+    image: '/uploads/2026/06/Premium-Taupe-Longline-Embroidered-Tuxedo-Coat-3.webp',
+    link: '/shop/premium-taupe-longline-embroidered-tuxedo-coat',
+    tier: 'Platinum',
+  },
+  {
+    name: "Men's Premium Prince Coat",
+    price: '£950',
+    image: '/uploads/2026/06/Mens-Premium-Prince-Coat-4.webp',
+    link: '/shop/mens-premium-prince-coat',
+    tier: 'Platinum',
+  },
+  {
+    name: 'Burgundy Wool Blazer — Gold Collar',
+    price: '£750',
+    image: '/uploads/2026/06/Womens-Burgundy-Wool-Blazer-4.webp',
+    link: '/shop/burgundy-wool-blazer-gold-collar',
     tier: 'Gold',
   },
   {
-    name: 'Bespoke Ceremonial Robes & Fraternal Regalia',
-    price: '£1,800',
-    image: '/uploads/2026/05/daroodi-ceremonial-robes.jpg',
-    link: '/shop/daroodi-bespoke-ceremonial-regalia',
-    tier: 'Platinum',
+    name: 'Black Brocade Tuxedo Jacket',
+    price: '£850',
+    image: '/uploads/2026/06/Black-Brocade-Tuxedo-Jacket-3.webp',
+    link: '/shop/black-brocade-tuxedo-jacket',
+    tier: 'Gold',
   },
   {
-    name: 'Masonic Grand Master Embroidered Collar',
-    price: '£850',
-    image: '/uploads/2026/05/daroodi-masonic-regalia.jpg',
-    link: '/shop/daroodi-bespoke-ceremonial-regalia',
+    name: 'Ivory White Linen Blazer',
+    price: '£650',
+    image: '/uploads/2026/06/Ivory-White-Linen-Tailored-Blazer-4.webp',
+    link: '/shop/ivory-white-linen-tailored-blazer',
     tier: 'Silver',
   },
   {
-    name: 'Ecclesiastical Gold Bullion Bishop Robe',
-    price: '£1,650',
-    image: '/uploads/2026/05/daroodi-bishops-robes.jpg',
-    link: '/shop/daroodi-bespoke-ceremonial-regalia',
-    tier: 'Platinum',
+    name: 'Black Blazer — Art Deco Silver',
+    price: '£600',
+    image: '/uploads/2026/06/Black-Blazer-3.webp',
+    link: '/shop/black-blazer-silver-art-deco',
+    tier: 'Silver',
+  },
+  {
+    name: 'Gold Floral Wool Blazer',
+    price: '£720',
+    image: '/uploads/2026/06/Black-Wool-Blend-Tailored-Blazer-11.webp',
+    link: '/shop/black-wool-blend-tailored-blazer-gold-floral',
+    tier: 'Gold',
+  },
+  {
+    name: 'Navy Blue Slim Suit Coat',
+    price: '£680',
+    image: '/uploads/2026/06/Mens-Navy-Blue-Slim-Suit-Coat-3.webp',
+    link: '/shop/mens-navy-blue-slim-suit-coat',
+    tier: 'Essentials',
   },
 ];
 
@@ -110,13 +110,13 @@ export default function HomePage() {
           <div className="hero-blob blob-1"></div>
           <div className="hero-blob blob-2"></div>
           <div className="hero-particles" id="particles">
-            {Array.from({ length: 20 }).map((_, i) => (
-              <div
+            {Array.from({ length: 18 }).map((_, i) => (
+              <span
                 key={i}
                 className="particle"
                 style={{
-                  left: `${(i * 19) % 100}%`,
-                  top: `${(i * 23) % 100}%`,
+                  top: `${(i * 17) % 95}%`,
+                  left: `${(i * 23) % 95}%`,
                   animationDelay: `${(i * 0.4) % 5}s`,
                   animationDuration: `${4 + (i % 4)}s`,
                 }}
@@ -161,29 +161,38 @@ export default function HomePage() {
                 <div className="frame-corner bl"></div>
                 <div className="frame-corner br"></div>
                 <img
-                  src="https://daroodi.com/wp-content/uploads/2026/06/Mens-Premium-Prince-Coat-4.webp"
+                  src="/uploads/2026/06/Mens-Premium-Prince-Coat-4.webp"
                   alt="Men's premium embroidered prince coat in deep green velvet with gold threadwork"
                   className="hero-image"
                   width={480}
                   height={620}
+                  onError={(e) => {
+                    (e.target as HTMLImageElement).src = '/uploads/2026/05/hero-coat.jpg';
+                  }}
                 />
               </div>
               <div className="floating-card card-1">
                 <img
-                  src="https://daroodi.com/wp-content/uploads/2026/06/Womens-Burgundy-Wool-Blazer-4.webp"
+                  src="/uploads/2026/06/Womens-Burgundy-Wool-Blazer-4.webp"
                   alt="Women's burgundy wool blazer with gold celestial collar embroidery"
                   width={140}
                   height={180}
                   loading="lazy"
+                  onError={(e) => {
+                    (e.target as HTMLImageElement).src = '/uploads/2026/05/womens-coat-1.jpg';
+                  }}
                 />
               </div>
               <div className="floating-card card-2">
                 <img
-                  src="https://daroodi.com/wp-content/uploads/2026/06/Black-Brocade-Tuxedo-Jacket-3.webp"
+                  src="/uploads/2026/06/Black-Brocade-Tuxedo-Jacket-3.webp"
                   alt="Black brocade tuxedo jacket with hand-stitched detailing"
                   width={140}
                   height={180}
                   loading="lazy"
+                  onError={(e) => {
+                    (e.target as HTMLImageElement).src = '/uploads/2026/06/Black-Brocade-Tuxedo-Jacket.webp';
+                  }}
                 />
               </div>
             </div>
@@ -400,9 +409,10 @@ export default function HomePage() {
             <Link href="/shop" className="category-card">
               <div className="category-img-wrap">
                 <img
-                  src="https://daroodi.com/wp-content/uploads/2026/06/Mens-Slate-Blue-Double-Breasted-Overcoat-3.webp"
+                  src="/uploads/2026/06/Mens-Slate-Blue-Double-Breasted-Overcoat-3.webp"
                   alt="Luxury embroidered overcoats and longline formal outerwear"
                   loading="lazy"
+                  onError={(e) => { (e.target as HTMLImageElement).src = '/uploads/2026/06/Black-Wool-Blend-Tailored-Blazer-7.webp'; }}
                 />
                 <span className="category-num">01</span>
               </div>
@@ -414,9 +424,10 @@ export default function HomePage() {
             <Link href="/shop" className="category-card">
               <div className="category-img-wrap">
                 <img
-                  src="https://daroodi.com/wp-content/uploads/2026/06/Black-Wool-Blend-Tailored-Blazer-11.webp"
+                  src="/uploads/2026/06/Black-Wool-Blend-Tailored-Blazer-11.webp"
                   alt="Embroidered blazers and tailored jackets for men and women"
                   loading="lazy"
+                  onError={(e) => { (e.target as HTMLImageElement).src = '/uploads/2026/06/Black-Wool-Blend-Tailored-Blazer.webp'; }}
                 />
                 <span className="category-num">02</span>
               </div>
@@ -428,9 +439,10 @@ export default function HomePage() {
             <Link href="/shop" className="category-card">
               <div className="category-img-wrap">
                 <img
-                  src="https://daroodi.com/wp-content/uploads/2026/06/Mens-Camel-Tan-Wool-Blazer-3.webp"
+                  src="/uploads/2026/06/Mens-Camel-Tan-Wool-Blazer-3.webp"
                   alt="Men's formal wear and evening embroidered suits"
                   loading="lazy"
+                  onError={(e) => { (e.target as HTMLImageElement).src = '/uploads/2026/06/Burgundy-Blazer-·-Silver-Art-Deco.webp'; }}
                 />
                 <span className="category-num">03</span>
               </div>
@@ -442,9 +454,10 @@ export default function HomePage() {
             <Link href="/shop" className="category-card">
               <div className="category-img-wrap">
                 <img
-                  src="https://daroodi.com/wp-content/uploads/2026/06/Womens-Antique-Ivory-Silk-Velvet-Gown-Coat-4.webp"
+                  src="/uploads/2026/06/Womens-Antique-Ivory-Silk-Velvet-Gown-Coat-4.webp"
                   alt="Women's couture coats and embroidered evening wear"
                   loading="lazy"
+                  onError={(e) => { (e.target as HTMLImageElement).src = '/uploads/2026/05/womens-coat-1.jpg'; }}
                 />
                 <span className="category-num">04</span>
               </div>
@@ -482,46 +495,52 @@ export default function HomePage() {
           <div className="craft-visual">
             <div className="craft-image-stack craft-stack-desktop">
               <img
-                src="https://daroodi.com/wp-content/uploads/2026/06/Ivory-White-Linen-Tailored-Blazer-4.webp"
+                src="/uploads/2026/06/Ivory-White-Linen-Tailored-Blazer-4.webp"
                 alt="Ivory linen blazer with floral sleeve embroidery"
                 className="stack-img stack-1"
                 loading="lazy"
+                onError={(e) => { (e.target as HTMLImageElement).src = '/uploads/2026/06/Black-Blazer-3.webp'; }}
               />
               <img
-                src="https://daroodi.com/wp-content/uploads/2026/06/Mens-Warm-Taupe-Silk-Velvet-Blazer-3.webp"
+                src="/uploads/2026/06/Mens-Warm-Taupe-Silk-Velvet-Blazer-3.webp"
                 alt="Taupe silk velvet blazer with silver thread lapels"
                 className="stack-img stack-2"
                 loading="lazy"
+                onError={(e) => { (e.target as HTMLImageElement).src = '/uploads/2026/06/Burgundy-Velvet-Tuxedo-Jacket.webp'; }}
               />
               <img
-                src="https://daroodi.com/wp-content/uploads/2026/06/Premium-Chocolate-Brown-Embellished-Tuxedo-Blazer-3.webp"
+                src="/uploads/2026/06/Premium-Chocolate-Brown-Embellished-Tuxedo-Blazer-3.webp"
                 alt="Chocolate brown embellished tuxedo blazer"
                 className="stack-img stack-3"
                 loading="lazy"
+                onError={(e) => { (e.target as HTMLImageElement).src = '/uploads/2026/06/Black-Brocade-Tuxedo-Jacket.webp'; }}
               />
             </div>
             <div className="craft-scroll-gallery" aria-label="Craftsmanship gallery">
               <figure className="craft-slide craft-slide-1">
                 <img
-                  src="https://daroodi.com/wp-content/uploads/2026/06/Ivory-White-Linen-Tailored-Blazer-4.webp"
+                  src="/uploads/2026/06/Ivory-White-Linen-Tailored-Blazer-4.webp"
                   alt="Ivory linen blazer with floral embroidery"
                   loading="lazy"
+                  onError={(e) => { (e.target as HTMLImageElement).src = '/uploads/2026/06/Black-Blazer-3.webp'; }}
                 />
                 <figcaption>Hand-embroidered linen</figcaption>
               </figure>
               <figure className="craft-slide craft-slide-2">
                 <img
-                  src="https://daroodi.com/wp-content/uploads/2026/06/Mens-Warm-Taupe-Silk-Velvet-Blazer-3.webp"
+                  src="/uploads/2026/06/Mens-Warm-Taupe-Silk-Velvet-Blazer-3.webp"
                   alt="Taupe silk velvet blazer"
                   loading="lazy"
+                  onError={(e) => { (e.target as HTMLImageElement).src = '/uploads/2026/06/Burgundy-Velvet-Tuxedo-Jacket.webp'; }}
                 />
                 <figcaption>Silk velvet tailoring</figcaption>
               </figure>
               <figure className="craft-slide craft-slide-3">
                 <img
-                  src="https://daroodi.com/wp-content/uploads/2026/06/Premium-Chocolate-Brown-Embellished-Tuxedo-Blazer-3.webp"
+                  src="/uploads/2026/06/Premium-Chocolate-Brown-Embellished-Tuxedo-Blazer-3.webp"
                   alt="Chocolate brown tuxedo blazer"
                   loading="lazy"
+                  onError={(e) => { (e.target as HTMLImageElement).src = '/uploads/2026/06/Black-Brocade-Tuxedo-Jacket.webp'; }}
                 />
                 <figcaption>Embellished formalwear</figcaption>
               </figure>

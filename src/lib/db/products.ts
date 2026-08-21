@@ -2,7 +2,7 @@ import { supabase } from '@/lib/supabase/client';
 import { Product } from '@/lib/types';
 import { INITIAL_PRODUCTS } from '@/lib/mockData';
 
-const PRODUCTS_STORAGE_KEY = 'daroodi_db_products';
+const PRODUCTS_STORAGE_KEY = 'daroodi_master_products_v2';
 
 export async function getProducts(): Promise<Product[]> {
   try {
