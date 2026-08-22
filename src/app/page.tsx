@@ -14,14 +14,14 @@ const PRODUCTS = [
   {
     name: "Men's Premium Prince Coat",
     price: '£950',
-    image: '/uploads/2026/06/Mens-Premium-Prince-Coat-4.webp',
+    image: '/uploads/2026/06/Mens-Premium-Prince-Coat-2.webp',
     link: '/shop/mens-premium-prince-coat',
     tier: 'Platinum',
   },
   {
     name: 'Burgundy Wool Blazer — Gold Collar',
     price: '£750',
-    image: '/uploads/2026/06/Womens-Burgundy-Wool-Blazer-4.webp',
+    image: '/uploads/2026/06/Womens-Burgundy-Wool-Blazer.webp',
     link: '/shop/burgundy-wool-blazer-gold-collar',
     tier: 'Gold',
   },
@@ -49,7 +49,7 @@ const PRODUCTS = [
   {
     name: 'Gold Floral Wool Blazer',
     price: '£720',
-    image: '/uploads/2026/06/Black-Wool-Blend-Tailored-Blazer-11.webp',
+    image: '/uploads/2026/06/Black-Wool-Blend-Tailored-Blazer-5.webp',
     link: '/shop/black-wool-blend-tailored-blazer-gold-floral',
     tier: 'Gold',
   },
@@ -161,7 +161,7 @@ export default function HomePage() {
                 <div className="frame-corner bl"></div>
                 <div className="frame-corner br"></div>
                 <img
-                  src="/uploads/2026/06/Mens-Premium-Prince-Coat-4.webp"
+                  src="/uploads/2026/06/Mens-Premium-Prince-Coat-2.webp"
                   alt="Men's premium embroidered prince coat in deep green velvet with gold threadwork"
                   className="hero-image"
                   width={480}
@@ -173,7 +173,7 @@ export default function HomePage() {
               </div>
               <div className="floating-card card-1">
                 <img
-                  src="/uploads/2026/06/Womens-Burgundy-Wool-Blazer-4.webp"
+                  src="/uploads/2026/06/Womens-Burgundy-Wool-Blazer.webp"
                   alt="Women's burgundy wool blazer with gold celestial collar embroidery"
                   width={140}
                   height={180}
@@ -386,7 +386,7 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* ─── Categories ───────────────────────────────────────────── */}
+      {/* ─── Categories (Curated Lines by Tier) ───────────────────── */}
       <section className="categories" aria-labelledby="categories-heading">
         <div className="section-deco section-deco--categories" aria-hidden="true">
           <span className="deco-ring deco-ring-1"></span>
@@ -399,71 +399,71 @@ export default function HomePage() {
               <span className="ornament-gem">◆</span>
               <span className="ornament-line"></span>
             </div>
-            <span className="eyebrow">Browse by Style</span>
-            <h2 id="categories-heading">Shop by Category</h2>
+            <span className="eyebrow">Curated Lines</span>
+            <h2 id="categories-heading">Shop by Collection Tier</h2>
             <p className="section-desc">
-              From statement outerwear to tailored blazers — explore our most-loved categories, each piece available in custom sizing.
+              From heirloom ceremonial coats to refined everyday tailored blazers — explore our hallmark collections.
             </p>
           </header>
           <div className="categories-grid">
-            <Link href="/shop" className="category-card">
+            <Link href="/collections#platinum" className="category-card">
               <div className="category-img-wrap">
                 <img
-                  src="/uploads/2026/06/Mens-Premium-Prince-Coat-4.webp"
-                  alt="Men's embroidered prince coats and bespoke outerwear"
+                  src="/uploads/2026/06/Mens-Premium-Prince-Coat-2.webp"
+                  alt="Platinum bespoke heirloom coats"
                   loading="lazy"
                   onError={(e) => { (e.target as HTMLImageElement).src = '/uploads/2026/05/hero-coat.jpg'; }}
                 />
                 <span className="category-num">01</span>
               </div>
               <div className="category-body">
-                <h3>Men&apos;s Collection</h3>
-                <span>Prince coats, tuxedo jackets &amp; sherwanis →</span>
+                <h3>Platinum Collection</h3>
+                <span>Heirloom ceremonial coats &amp; 120+ hr zardozi →</span>
               </div>
             </Link>
-            <Link href="/shop" className="category-card">
+            <Link href="/collections#gold" className="category-card">
               <div className="category-img-wrap">
                 <img
-                  src="/uploads/2026/06/Womens-Burgundy-Wool-Blazer-4.webp"
-                  alt="Women's embroidered blazers and tailored jackets"
+                  src="/uploads/2026/06/Black-Wool-Blend-Tailored-Blazer-5.webp"
+                  alt="Gold collection embroidered formal blazers"
                   loading="lazy"
                   onError={(e) => { (e.target as HTMLImageElement).src = '/uploads/2026/05/womens-coat-1.jpg'; }}
                 />
                 <span className="category-num">02</span>
               </div>
               <div className="category-body">
-                <h3>Women&apos;s Collection</h3>
-                <span>Tailored blazers, cape coats &amp; suits →</span>
+                <h3>Gold Collection</h3>
+                <span>Rich metallic threadwork &amp; botanical motifs →</span>
               </div>
             </Link>
-            <Link href="/collections#platinum" className="category-card">
+            <Link href="/collections#silver" className="category-card">
               <div className="category-img-wrap">
                 <img
-                  src="/uploads/2026/06/Premium-Taupe-Longline-Embroidered-Tuxedo-Coat-3.webp"
-                  alt="Platinum bespoke ceremonial and wedding coats"
+                  src="/uploads/2026/06/Womens-Burgundy-Wool-Blazer.webp"
+                  alt="Silver collection tailored blazers"
                   loading="lazy"
                   onError={(e) => { (e.target as HTMLImageElement).src = '/uploads/2026/06/Mens-Premium-Prince-Coat-4.webp'; }}
                 />
                 <span className="category-num">03</span>
               </div>
               <div className="category-body">
-                <h3>Ceremonial &amp; Wedding</h3>
-                <span>Heirloom statement pieces for grooms &amp; hosts →</span>
+                <h3>Silver Collection</h3>
+                <span>Art Deco lines &amp; structured wool tailoring →</span>
               </div>
             </Link>
-            <Link href="/custom-order" className="category-card">
+            <Link href="/collections#essentials" className="category-card">
               <div className="category-img-wrap">
                 <img
-                  src="/uploads/2026/06/Black-Wool-Blend-Tailored-Blazer-11.webp"
-                  alt="Bespoke custom tailoring service"
+                  src="/uploads/2026/06/Black-Brocade-Tuxedo-Jacket-3.webp"
+                  alt="Popular and Essentials tailored pieces"
                   loading="lazy"
                   onError={(e) => { (e.target as HTMLImageElement).src = '/uploads/2026/06/Black-Wool-Blend-Tailored-Blazer.webp'; }}
                 />
                 <span className="category-num">04</span>
               </div>
               <div className="category-body">
-                <h3>Bespoke Custom</h3>
-                <span>Choose your fabric, thread colors &amp; custom sizing →</span>
+                <h3>Popular &amp; Essentials</h3>
+                <span>Bespoke brocades &amp; everyday statement luxury →</span>
               </div>
             </Link>
           </div>
