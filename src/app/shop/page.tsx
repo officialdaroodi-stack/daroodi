@@ -63,26 +63,78 @@ export default function ShopPage() {
 
   const categories = [
     { id: 'all', name: 'All Masterpieces', count: products.length },
-    { id: 'overcoat', name: 'Overcoats & Dusters', count: products.filter(p => p.title.toLowerCase().includes('duster') || p.title.toLowerCase().includes('gown') || p.title.toLowerCase().includes('opera') || p.title.toLowerCase().includes('overcoat')).length },
-    { id: 'prince-coat', name: 'Prince Coats', count: products.filter(p => p.title.toLowerCase().includes('prince')).length },
-    { id: 'blazer', name: 'Embroidered Blazers', count: products.filter(p => p.title.toLowerCase().includes('blazer') || p.title.toLowerCase().includes('jacket') || p.title.toLowerCase().includes('boucle')).length },
-    { id: 'tuxedo', name: 'Tuxedos & Formal Suits', count: products.filter(p => p.title.toLowerCase().includes('tuxedo') || p.title.toLowerCase().includes('suit')).length },
-    { id: 'regalia', name: 'Ceremonial Regalia', count: products.filter(p => p.title.toLowerCase().includes('regalia') || p.title.toLowerCase().includes('robe') || p.title.toLowerCase().includes('collar')).length || 1 },
+    {
+      id: 'platinum',
+      name: 'Platinum Collection',
+      count: products.filter(
+        (p) =>
+          p.collection_id === 'col-platinum' ||
+          p.tier === 'Platinum' ||
+          p.categories?.includes('Platinum Collection')
+      ).length,
+    },
+    {
+      id: 'gold',
+      name: 'Gold Collection',
+      count: products.filter(
+        (p) =>
+          p.collection_id === 'col-gold' ||
+          p.tier === 'Gold' ||
+          p.categories?.includes('Gold Collection')
+      ).length,
+    },
+    {
+      id: 'silver',
+      name: 'Silver Collection',
+      count: products.filter(
+        (p) =>
+          p.collection_id === 'col-silver' ||
+          p.tier === 'Silver' ||
+          p.categories?.includes('Silver Collection')
+      ).length,
+    },
+    {
+      id: 'essentials',
+      name: 'Popular & Essentials',
+      count: products.filter(
+        (p) =>
+          p.collection_id === 'col-essentials' ||
+          p.tier === 'Essentials' ||
+          p.categories?.includes('Essentials Collection')
+      ).length,
+    },
   ];
 
   const filteredProducts = products.filter((prod) => {
-    // Category match
-    const titleL = prod.title.toLowerCase();
-    if (selectedCategory === 'overcoat') {
-      if (!titleL.includes('duster') && !titleL.includes('gown') && !titleL.includes('opera') && !titleL.includes('overcoat')) return false;
-    } else if (selectedCategory === 'prince-coat') {
-      if (!titleL.includes('prince')) return false;
-    } else if (selectedCategory === 'blazer') {
-      if (!titleL.includes('blazer') && !titleL.includes('jacket') && !titleL.includes('boucle')) return false;
-    } else if (selectedCategory === 'tuxedo') {
-      if (!titleL.includes('tuxedo') && !titleL.includes('suit')) return false;
-    } else if (selectedCategory === 'regalia') {
-      if (!titleL.includes('regalia') && !titleL.includes('robe') && !titleL.includes('collar')) return false;
+    // Category / Collection match
+    if (selectedCategory === 'platinum') {
+      if (
+        prod.collection_id !== 'col-platinum' &&
+        prod.tier !== 'Platinum' &&
+        !prod.categories?.includes('Platinum Collection')
+      )
+        return false;
+    } else if (selectedCategory === 'gold') {
+      if (
+        prod.collection_id !== 'col-gold' &&
+        prod.tier !== 'Gold' &&
+        !prod.categories?.includes('Gold Collection')
+      )
+        return false;
+    } else if (selectedCategory === 'silver') {
+      if (
+        prod.collection_id !== 'col-silver' &&
+        prod.tier !== 'Silver' &&
+        !prod.categories?.includes('Silver Collection')
+      )
+        return false;
+    } else if (selectedCategory === 'essentials') {
+      if (
+        prod.collection_id !== 'col-essentials' &&
+        prod.tier !== 'Essentials' &&
+        !prod.categories?.includes('Essentials Collection')
+      )
+        return false;
     }
 
     // Availability

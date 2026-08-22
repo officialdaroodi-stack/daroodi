@@ -124,6 +124,10 @@ export interface Product {
   title: string;
   collection_id: string;
   collection?: Collection;
+  tier?: string;
+  categories?: string[];
+  tags?: string[];
+  sku?: string;
   base_price_gbp: number;
   regular_price_gbp?: number;
   sale_price_gbp?: number;
