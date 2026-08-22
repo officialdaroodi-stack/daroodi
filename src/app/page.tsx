@@ -332,7 +332,7 @@ export default function HomePage() {
                       loading="lazy"
                     />
                     <div className="carousel-item-info">
-                      <h4>{prod.name}</h4>
+                      <h3>{prod.name}</h3>
                       <span className="price">{prod.price}</span>
                     </div>
                   </div>
@@ -369,7 +369,7 @@ export default function HomePage() {
                   <span className="product-quick-view">View Product</span>
                 </div>
                 <div className="product-info">
-                  <h4>{prod.name}</h4>
+                  <h3>{prod.name}</h3>
                   <span className="price">
                     <span className="from">From </span>
                     {prod.price}
@@ -657,7 +657,7 @@ export default function HomePage() {
           <div className="testimonials-grid">
             <article className="review-card">
               <div className="review-card-top">
-                <div className="tp-stars tp-stars-sm" aria-label="5 out of 5 stars">
+                <div className="tp-stars tp-stars-sm" role="img" aria-label="5 out of 5 stars">
                   <span className="tp-star filled"></span>
                   <span className="tp-star filled"></span>
                   <span className="tp-star filled"></span>
@@ -691,7 +691,7 @@ export default function HomePage() {
 
             <article className="review-card">
               <div className="review-card-top">
-                <div className="tp-stars tp-stars-sm" aria-label="5 out of 5 stars">
+                <div className="tp-stars tp-stars-sm" role="img" aria-label="5 out of 5 stars">
                   <span className="tp-star filled"></span>
                   <span className="tp-star filled"></span>
                   <span className="tp-star filled"></span>
@@ -725,7 +725,7 @@ export default function HomePage() {
 
             <article className="review-card">
               <div className="review-card-top">
-                <div className="tp-stars tp-stars-sm" aria-label="5 out of 5 stars">
+                <div className="tp-stars tp-stars-sm" role="img" aria-label="5 out of 5 stars">
                   <span className="tp-star filled"></span>
                   <span className="tp-star filled"></span>
                   <span className="tp-star filled"></span>

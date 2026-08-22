@@ -40,7 +40,15 @@ export const Header: React.FC = () => {
             </div>
             <Link href="/" className="logo logo-3d">
               <span className="logo-emblem">
-                <img src="https://daroodi.com/wp-content/uploads/2026/06/cropped-Droodi-Logo.webp" alt="Daroodi logo" width={34} height={34} />
+                <img
+                  src="/uploads/2026/06/cropped-Droodi-Logo.webp"
+                  alt="Daroodi logo"
+                  width={34}
+                  height={34}
+                  onError={(e) => {
+                    (e.target as HTMLImageElement).src = '/uploads/2026/05/cropped-Droodi-Logo.jpg';
+                  }}
+                />
               </span>
               <span className="logo-text">Daroodi</span>
             </Link>
@@ -80,7 +88,15 @@ export const Header: React.FC = () => {
             <div className="drawer-header">
               <Link href="/" className="drawer-brand" onClick={() => setIsDrawerOpen(false)}>
                 <span className="drawer-brand-emblem">
-                  <img src="https://daroodi.com/wp-content/uploads/2026/06/cropped-Droodi-Logo.webp" alt="" width={32} height={32} />
+                  <img
+                    src="/uploads/2026/06/cropped-Droodi-Logo.webp"
+                    alt=""
+                    width={32}
+                    height={32}
+                    onError={(e) => {
+                      (e.target as HTMLImageElement).src = '/uploads/2026/05/cropped-Droodi-Logo.jpg';
+                    }}
+                  />
                 </span>
                 <span className="drawer-brand-text">
                   <strong>Daroodi</strong>

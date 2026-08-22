@@ -19,7 +19,7 @@ export default function OurHeritagePage() {
 
       <div style={{ borderRadius: 'var(--radius-xl)', overflow: 'hidden', marginBottom: '60px', boxShadow: 'var(--shadow-3d-card)', border: '1px solid var(--cream-300)' }}>
         <img
-          src="https://daroodi.com/wp-content/uploads/2026/06/Mens-Premium-Prince-Coat-4.webp"
+          src="/uploads/2026/06/Mens-Premium-Prince-Coat-2.webp"
           alt="Daroodi Master Atelier"
           style={{ width: '100%', maxHeight: '480px', objectFit: 'cover' }}
         />

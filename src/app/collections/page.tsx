@@ -45,28 +45,37 @@ export default function CollectionsPage() {
             <div className="col-hero-3d" id="colHero3d">
               <div className="col-stack-card col-stack-1">
                 <img
-                  src="https://daroodi.com/wp-content/uploads/2026/06/Mens-Premium-Prince-Coat-4.webp"
+                  src="/uploads/2026/06/Mens-Premium-Prince-Coat-2.webp"
                   alt="Platinum prince coat with gold embroidery"
                   width={220}
                   height={290}
+                  onError={(e) => {
+                    (e.target as HTMLImageElement).src = '/uploads/2026/05/hero-coat.jpg';
+                  }}
                 />
                 <span className="col-stack-badge col-badge-platinum">Platinum</span>
               </div>
               <div className="col-stack-card col-stack-2">
                 <img
-                  src="https://daroodi.com/wp-content/uploads/2026/06/Womens-Burgundy-Wool-Blazer-4.webp"
+                  src="/uploads/2026/06/Womens-Burgundy-Wool-Blazer.webp"
                   alt="Gold collection burgundy wool blazer"
                   width={200}
                   height={270}
+                  onError={(e) => {
+                    (e.target as HTMLImageElement).src = '/uploads/2026/05/hero-coat.jpg';
+                  }}
                 />
                 <span className="col-stack-badge col-badge-gold">Gold</span>
               </div>
               <div className="col-stack-card col-stack-3">
                 <img
-                  src="https://daroodi.com/wp-content/uploads/2026/06/Black-Blazer-3.webp"
+                  src="/uploads/2026/06/Black-Blazer-3.webp"
                   alt="Silver collection Art Deco blazer"
                   width={190}
                   height={260}
+                  onError={(e) => {
+                    (e.target as HTMLImageElement).src = '/uploads/2026/05/hero-coat.jpg';
+                  }}
                 />
                 <span className="col-stack-badge col-badge-silver">Silver</span>
               </div>
@@ -102,9 +111,12 @@ export default function CollectionsPage() {
                 <div className="col-frame-shadow"></div>
                 <div className="col-frame-inner">
                   <img
-                    src="https://daroodi.com/wp-content/uploads/2026/06/Premium-Taupe-Longline-Embroidered-Tuxedo-Coat-3.webp"
+                    src="/uploads/2026/06/Premium-Taupe-Longline-Embroidered-Tuxedo-Coat-3.webp"
                     alt="Platinum taupe longline embroidered tuxedo coat"
                     loading="lazy"
+                    onError={(e) => {
+                      (e.target as HTMLImageElement).src = '/uploads/2026/05/hero-coat.jpg';
+                    }}
                   />
                   <span className="col-frame-tier">Platinum Collection</span>
                 </div>
@@ -133,26 +145,32 @@ export default function CollectionsPage() {
             <Link href="/shop/mens-premium-velvet-prince-coat" className="col-product-card">
               <div className="col-product-img">
                 <img
-                  src="https://daroodi.com/wp-content/uploads/2026/06/Premium-Taupe-Longline-Embroidered-Tuxedo-Coat-3.webp"
+                  src="/uploads/2026/06/Premium-Taupe-Longline-Embroidered-Tuxedo-Coat-3.webp"
                   alt="Taupe longline tuxedo coat"
                   loading="lazy"
+                  onError={(e) => {
+                    (e.target as HTMLImageElement).src = '/uploads/2026/05/hero-coat.jpg';
+                  }}
                 />
               </div>
               <div className="col-product-info">
-                <h4>Taupe Longline Tuxedo Coat</h4>
+                <h3>Taupe Longline Tuxedo Coat</h3>
                 <span>£1,250</span>
               </div>
             </Link>
             <Link href="/shop/mens-premium-velvet-prince-coat" className="col-product-card">
               <div className="col-product-img">
                 <img
-                  src="https://daroodi.com/wp-content/uploads/2026/06/Mens-Premium-Prince-Coat-4.webp"
+                  src="/uploads/2026/06/Mens-Premium-Prince-Coat-2.webp"
                   alt="Men's premium prince coat"
                   loading="lazy"
+                  onError={(e) => {
+                    (e.target as HTMLImageElement).src = '/uploads/2026/05/hero-coat.jpg';
+                  }}
                 />
               </div>
               <div className="col-product-info">
-                <h4>Men&apos;s Premium Prince Coat</h4>
+                <h3>Men&apos;s Premium Prince Coat</h3>
                 <span>£950</span>
               </div>
             </Link>
@@ -175,9 +193,12 @@ export default function CollectionsPage() {
                 <div className="col-frame-shadow"></div>
                 <div className="col-frame-inner">
                   <img
-                    src="https://daroodi.com/wp-content/uploads/2026/06/Black-Brocade-Tuxedo-Jacket-3.webp"
+                    src="/uploads/2026/06/Black-Brocade-Tuxedo-Jacket-3.webp"
                     alt="Gold collection black brocade tuxedo jacket"
                     loading="lazy"
+                    onError={(e) => {
+                      (e.target as HTMLImageElement).src = '/uploads/2026/05/hero-coat.jpg';
+                    }}
                   />
                   <span className="col-frame-tier">Gold Collection</span>
                 </div>
@@ -206,26 +227,32 @@ export default function CollectionsPage() {
             <Link href="/shop" className="col-product-card">
               <div className="col-product-img">
                 <img
-                  src="https://daroodi.com/wp-content/uploads/2026/06/Womens-Burgundy-Wool-Blazer-4.webp"
+                  src="/uploads/2026/06/Womens-Burgundy-Wool-Blazer.webp"
                   alt="Burgundy wool blazer gold collar"
                   loading="lazy"
+                  onError={(e) => {
+                    (e.target as HTMLImageElement).src = '/uploads/2026/05/hero-coat.jpg';
+                  }}
                 />
               </div>
               <div className="col-product-info">
-                <h4>Burgundy Wool Blazer</h4>
+                <h3>Burgundy Wool Blazer</h3>
                 <span>£750</span>
               </div>
             </Link>
             <Link href="/shop" className="col-product-card">
               <div className="col-product-img">
                 <img
-                  src="https://daroodi.com/wp-content/uploads/2026/06/Black-Brocade-Tuxedo-Jacket-3.webp"
+                  src="/uploads/2026/06/Black-Brocade-Tuxedo-Jacket-3.webp"
                   alt="Black brocade tuxedo jacket"
                   loading="lazy"
+                  onError={(e) => {
+                    (e.target as HTMLImageElement).src = '/uploads/2026/05/hero-coat.jpg';
+                  }}
                 />
               </div>
               <div className="col-product-info">
-                <h4>Black Brocade Tuxedo</h4>
+                <h3>Black Brocade Tuxedo</h3>
                 <span>£850</span>
               </div>
             </Link>
@@ -248,9 +275,12 @@ export default function CollectionsPage() {
                 <div className="col-frame-shadow"></div>
                 <div className="col-frame-inner">
                   <img
-                    src="https://daroodi.com/wp-content/uploads/2026/06/Ivory-White-Linen-Tailored-Blazer-4.webp"
+                    src="/uploads/2026/06/Ivory-White-Linen-Tailored-Blazer-4.webp"
                     alt="Silver collection ivory linen blazer"
                     loading="lazy"
+                    onError={(e) => {
+                      (e.target as HTMLImageElement).src = '/uploads/2026/05/hero-coat.jpg';
+                    }}
                   />
                   <span className="col-frame-tier">Silver Collection</span>
                 </div>
@@ -279,26 +309,32 @@ export default function CollectionsPage() {
             <Link href="/shop" className="col-product-card">
               <div className="col-product-img">
                 <img
-                  src="https://daroodi.com/wp-content/uploads/2026/06/Ivory-White-Linen-Tailored-Blazer-4.webp"
+                  src="/uploads/2026/06/Ivory-White-Linen-Tailored-Blazer-4.webp"
                   alt="Ivory white linen blazer"
                   loading="lazy"
+                  onError={(e) => {
+                    (e.target as HTMLImageElement).src = '/uploads/2026/05/hero-coat.jpg';
+                  }}
                 />
               </div>
               <div className="col-product-info">
-                <h4>Ivory Linen Blazer</h4>
+                <h3>Ivory Linen Blazer</h3>
                 <span>£650</span>
               </div>
             </Link>
             <Link href="/shop" className="col-product-card">
               <div className="col-product-img">
                 <img
-                  src="https://daroodi.com/wp-content/uploads/2026/06/Black-Blazer-3.webp"
+                  src="/uploads/2026/06/Black-Blazer-3.webp"
                   alt="Black blazer silver Art Deco"
                   loading="lazy"
+                  onError={(e) => {
+                    (e.target as HTMLImageElement).src = '/uploads/2026/05/hero-coat.jpg';
+                  }}
                 />
               </div>
               <div className="col-product-info">
-                <h4>Black Art Deco Blazer</h4>
+                <h3>Black Art Deco Blazer</h3>
                 <span>£600</span>
               </div>
             </Link>
@@ -321,9 +357,12 @@ export default function CollectionsPage() {
                 <div className="col-frame-shadow"></div>
                 <div className="col-frame-inner">
                   <img
-                    src="https://daroodi.com/wp-content/uploads/2026/06/Mens-Navy-Blue-Slim-Suit-Coat-3.webp"
+                    src="/uploads/2026/06/Mens-Navy-Blue-Slim-Suit-Coat-3.webp"
                     alt="Essentials navy blue slim suit coat"
                     loading="lazy"
+                    onError={(e) => {
+                      (e.target as HTMLImageElement).src = '/uploads/2026/05/hero-coat.jpg';
+                    }}
                   />
                   <span className="col-frame-tier">Essentials Collection</span>
                 </div>
@@ -352,26 +391,32 @@ export default function CollectionsPage() {
             <Link href="/shop" className="col-product-card">
               <div className="col-product-img">
                 <img
-                  src="https://daroodi.com/wp-content/uploads/2026/06/Mens-Navy-Blue-Slim-Suit-Coat-3.webp"
+                  src="/uploads/2026/06/Mens-Navy-Blue-Slim-Suit-Coat-3.webp"
                   alt="Navy blue slim suit coat"
                   loading="lazy"
+                  onError={(e) => {
+                    (e.target as HTMLImageElement).src = '/uploads/2026/05/hero-coat.jpg';
+                  }}
                 />
               </div>
               <div className="col-product-info">
-                <h4>Navy Slim Suit Coat</h4>
+                <h3>Navy Slim Suit Coat</h3>
                 <span>£680</span>
               </div>
             </Link>
             <Link href="/shop" className="col-product-card">
               <div className="col-product-img">
                 <img
-                  src="https://daroodi.com/wp-content/uploads/2026/06/Black-Wool-Blend-Tailored-Blazer-11.webp"
+                  src="/uploads/2026/06/Black-Wool-Blend-Tailored-Blazer-5.webp"
                   alt="Gold floral wool blazer"
                   loading="lazy"
+                  onError={(e) => {
+                    (e.target as HTMLImageElement).src = '/uploads/2026/05/hero-coat.jpg';
+                  }}
                 />
               </div>
               <div className="col-product-info">
-                <h4>Gold Floral Blazer</h4>
+                <h3>Gold Floral Blazer</h3>
                 <span>£720</span>
               </div>
             </Link>

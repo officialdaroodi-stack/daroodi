@@ -102,25 +102,25 @@ export default function SingleProductPage() {
     {
       title: 'The Art of Zardozi: From Royal Courts to Modern Black-Tie',
       date: 'Aug 12, 2026',
-      image: 'https://daroodi.com/wp-content/uploads/2026/06/Mens-Slate-Blue-Double-Breasted-Overcoat-3.webp',
+      image: '/uploads/2026/06/Mens-Slate-Blue-Double-Breasted-Overcoat-3.webp',
       slug: 'art-of-zardozi-heritage',
     },
     {
       title: 'How to Choose Your Wedding Prince Coat: The Complete Guide',
       date: 'Jul 29, 2026',
-      image: 'https://daroodi.com/wp-content/uploads/2026/06/Premium-Chocolate-Brown-Embellished-Tuxedo-Blazer-3.webp',
+      image: '/uploads/2026/06/Premium-Chocolate-Brown-Embellished-Tuxedo-Blazer-3.webp',
       slug: 'prince-coat-wedding-guide',
     },
     {
       title: 'Velvet vs. Brocade: Selecting the Right Ceremonial Fabric',
       date: 'Jul 15, 2026',
-      image: 'https://daroodi.com/wp-content/uploads/2026/06/Womens-Antique-Ivory-Silk-Velvet-Gown-Coat-4.webp',
+      image: '/uploads/2026/06/Womens-Antique-Ivory-Silk-Velvet-Gown-Coat-4.webp',
       slug: 'velvet-vs-brocade-fabrics',
     },
     {
       title: 'Mastering Made-to-Measure: Taking Flawless Body Measurements',
       date: 'Jun 30, 2026',
-      image: 'https://daroodi.com/wp-content/uploads/2026/06/Ivory-White-Linen-Tailored-Blazer-4.webp',
+      image: '/uploads/2026/06/Ivory-White-Linen-Tailored-Blazer-4.webp',
       slug: 'taking-perfect-body-measurements',
     },
   ];

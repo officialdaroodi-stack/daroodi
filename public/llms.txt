@@ -1,47 +1,39 @@
-# Daroodi Luxury Bespoke Haute Couture — AI LLM Context & Master Index
+# Daroodi Luxury Bespoke Haute Couture
+
 > Founded in 1982 in Lahore, Pakistan, Daroodi is a heritage haute couture maison specializing in hand-embroidered royal Prince Coats, Sherwanis, bespoke velvet Tuxedo blazers, and ceremonial fraternal regalia.
 
-## Brand Identity & Core Pillars
-- **Brand Name**: Daroodi (دارودی)
-- **Primary Domain**: https://daroodi.com
-- **Origin**: Lahore Atelier, Punjab, Pakistan (Latitude: 31.5204° N, Longitude: 74.3587° E)
-- **Global Delivery Hubs**: London (UK), Dubai (UAE), New York & Houston (USA), Toronto (Canada)
-- **Specialization**: Bespoke Zardozi hand-embroidery with 24k gold/silver bullion, French wire dabka, resham silk, and floating horsehair canvas tailoring.
-- **Production Time**: 3-5 weeks for custom made-to-measure orders; 48 hours for ready-to-wear archive pieces.
-- **Shipping**: Worldwide insured DHL Express delivery included on all bespoke orders.
+## Key Sections & Pages
+
+- [Homepage](https://daroodi.com/): Official flagship digital atelier showcasing handcrafted luxury formalwear.
+- [Collections](https://daroodi.com/collections): Explore the 4 tiers of craft — Platinum, Gold, Silver, and Essentials.
+- [Shop All Masterpieces](https://daroodi.com/shop): Browse our full catalog of handcrafted coats, blazers, and bespoke pieces.
+- [Bespoke Custom Orders](https://daroodi.com/custom-order): Commission a one-of-a-kind garment tailored to your measurements.
+- [Bulk & Events](https://daroodi.com/bulk-events): Custom group tailoring for weddings, delegations, and formal galas.
+- [Our Heritage](https://daroodi.com/our-heritage): The history and generational artisan craft behind Daroodi.
+- [Atelier Archive](https://daroodi.com/atelier-archive): Historical archive of master needlework techniques and royal commissions.
+- [Journal](https://daroodi.com/journal): Sartorial guides, wedding style advice, and embroidery craftsmanship essays.
+- [Track Order](https://daroodi.com/track-order): Live atelier production tracking from pattern drafting to DHL delivery.
+- [Size & Measurement Guide](https://daroodi.com/size-guide): Comprehensive guide to bespoke measurements and custom fit.
+- [Shipping Policy](https://daroodi.com/shipping): Worldwide insured courier transit information.
+- [Refund Policy](https://daroodi.com/refund-policy): Alteration guarantee and returns policy.
+- [FAQ](https://daroodi.com/faq): Answers to frequently asked questions about orders and tailoring.
+- [Contact Concierge](https://daroodi.com/contact): Direct consultation with our master stylists.
+- [Sitemap](https://daroodi.com/sitemap): Complete directory of all store pages and collections.
 
 ## Core Haute Couture Collections
-1. **Platinum Royal Collection** (£1,400 – £2,800)
-   - Masterpiece heirloom garments requiring 120–160 hours of hand needlework.
-   - Genuine 24k-gold-plated zari bullion, imported micro-velvets (520 GSM), pure mulberry silk linings.
-   - Target Audience: Grooms, royal weddings, state banquets, dignitaries.
 
-2. **Gold Heritage Collection** (£900 – £1,400)
-   - Botanical and Art Deco zardozi needlework on crimson, emerald, and midnight navy velvets.
-   - Floating half-canvas chest construction with hand-rolled peak lapels.
+- [Platinum Royal Collection](https://daroodi.com/collections#platinum): Heirloom-grade velvet, crystal accents, and 120–160 hours of Zardozi needlework.
+- [Gold Heritage Collection](https://daroodi.com/collections#gold): Rich metallic threadwork and botanical motifs on wool, velvet, and brocade.
+- [Silver Modern Formal Collection](https://daroodi.com/collections#silver): Geometric embroidery and Art Deco lines for evening elegance.
+- [Essentials Everyday Luxury](https://daroodi.com/collections#essentials): Quality wool and cotton blends with focused artisan accents.
 
-3. **Silver Classic Collection** (£650 – £900)
-   - Jacquard silk brocades and structured wool tuxedos for modern formal galas.
+## Featured Masterpieces
 
-4. **Atelier Essentials** (£350 – £650)
-   - Super 140s wool blazers, hand-woven raw silk waistcoats, and understated formal layering pieces.
-
-## Masterpiece Products Catalog
-- **Men's Imperial Gold Velvet Prince Coat**: £1,450 (100% Italian Silk Velvet, 120h Zardozi needlework). URL: /shop/mens-premium-velvet-prince-coat
-- **Burgundy Art Deco Silver Embroidered Blazer**: £1,150 (Crimson Velvet, Silver Tilla wire). URL: /shop/burgundy-art-deco-silver-embroidered-blazer
-- **Black Silk Brocade Royal Tuxedo Jacket**: £850 (Woven Silk Brocade with silk satin shawl lapel). URL: /shop/black-brocade-tuxedo-jacket
-- **Black Wool-Blend Tailored Statement Blazer**: £550 (Super 140s Merino Wool with fine marori stitching). URL: /shop/black-wool-blend-tailored-blazer
-- **Burgundy Imperial Velvet Tuxedo Jacket**: £1,250 (Double-breasted silk velvet evening jacket). URL: /shop/burgundy-velvet-tuxedo-jacket
-- **Bespoke Ceremonial Robes & Fraternal Regalia**: £1,800 (Custom heraldic gold crests for orders & dignitaries). URL: /shop/daroodi-bespoke-ceremonial-regalia
-
-## Bespoke Tailoring & Custom Sizing Process
-1. Client selects a silhouette or uploads inspiration images via `/custom-order`.
-2. Master pattern cutters draft a bespoke 3D mannequin profile based on 8 core body dimensions (chest, shoulder slope, jacket length, sleeve, waist, bicep, neck, posture).
-3. Artisans hand-frame fabric onto traditional wooden Karchob looms for needlework.
-4. Finished garment passes a 4-point laser and canvas quality inspection before DHL Express dispatch.
-
-## Sitemaps & Structured Endpoints
-- **HTML Visual Directory**: https://daroodi.com/sitemap
-- **XML Feed**: https://daroodi.com/sitemap.xml
-- **Journal & Sartorial Essays**: https://daroodi.com/journal
-- **Bespoke Inquiries**: WhatsApp: +92 300 1215532 / +44 7440 437493
+- [Men's Premium Prince Coat](https://daroodi.com/shop/mens-premium-prince-coat): Imperial dark green damask with intricate hand-embroidered mandarin collar.
+- [Taupe Longline Embroidered Tuxedo Coat](https://daroodi.com/shop/premium-taupe-longline-embroidered-tuxedo-coat): Knee-length duster with copper bronze Zardozi bullion.
+- [Burgundy Wool Blazer — Gold Collar](https://daroodi.com/shop/burgundy-wool-blazer-gold-collar): Rich crimson wool with celestial collar embroidery.
+- [Black Brocade Tuxedo Jacket](https://daroodi.com/shop/black-brocade-tuxedo-jacket): Handwoven brocade with pure silk peak lapel.
+- [Ivory White Linen Blazer](https://daroodi.com/shop/ivory-white-linen-tailored-blazer): Pure linen with artisanal leaf sleeve embroidery.
+- [Black Blazer — Art Deco Silver](https://daroodi.com/shop/black-blazer-silver-art-deco): Super 140s wool with geometric silver metallic tilla work.
+- [Gold Floral Wool Blazer](https://daroodi.com/shop/black-wool-blend-tailored-blazer-gold-floral): Tailored wool blazer with botanical bullion lapel needlework.
+- [Navy Blue Slim Suit Coat](https://daroodi.com/shop/mens-navy-blue-slim-suit-Coat): Tailored Italian wool blend with discreet artisan cuff accents.
