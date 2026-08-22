@@ -166,6 +166,7 @@ export default function HomePage() {
                   className="hero-image"
                   width={480}
                   height={620}
+                  fetchPriority="high"
                   onError={(e) => {
                     (e.target as HTMLImageElement).src = '/uploads/2026/05/hero-coat.jpg';
                   }}

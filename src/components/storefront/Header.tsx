@@ -42,9 +42,11 @@ export const Header: React.FC = () => {
               <span className="logo-emblem">
                 <img
                   src="/uploads/2026/06/cropped-Droodi-Logo.webp"
-                  alt="Daroodi logo"
+                  alt=""
+                  aria-hidden="true"
                   width={34}
                   height={34}
+                  style={{ aspectRatio: '1 / 1', objectFit: 'contain' }}
                   onError={(e) => {
                     (e.target as HTMLImageElement).src = '/uploads/2026/05/cropped-Droodi-Logo.jpg';
                   }}
@@ -67,7 +69,7 @@ export const Header: React.FC = () => {
               <Link href="/auth/login" className="nav-icon nav-icon-3d nav-account" aria-label="My account">
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" aria-hidden="true"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
               </Link>
-              <Link href="/cart" className="nav-icon nav-icon-3d nav-shop" aria-label="Shop" style={{ position: 'relative' }}>
+              <Link href="/cart" className="nav-icon nav-icon-3d nav-shop" aria-label="Shopping bag" style={{ position: 'relative' }}>
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" aria-hidden="true"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><path d="M3 6h18"/><path d="M16 10a4 4 0 01-8 0"/></svg>
                 {totalItems > 0 && (
                   <span style={{ position: 'absolute', top: '-4px', right: '-4px', background: '#C9A84C', color: '#0F241E', borderRadius: '50%', width: '18px', height: '18px', fontSize: '11px', fontWeight: 800, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>

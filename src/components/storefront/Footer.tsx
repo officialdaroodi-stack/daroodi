@@ -32,7 +32,7 @@ export const Footer: React.FC = () => {
           <div className="footer-top">
             <div className="footer-brand">
               <Link href="/" className="footer-logo">
-                <img src="/uploads/2026/05/cropped-Droodi-Logo.jpg" alt="Daroodi" width="44" height="44" />
+                <img src="/uploads/2026/05/cropped-Droodi-Logo.jpg" alt="" aria-hidden="true" width="44" height="44" style={{ aspectRatio: '1 / 1', objectFit: 'contain' }} />
                 <span>Daroodi</span>
               </Link>
               <p>Handcrafted embroidered luxury for weddings, celebrations and refined everyday wear. Made to order, shipped worldwide.</p>
