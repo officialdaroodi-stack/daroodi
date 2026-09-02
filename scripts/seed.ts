@@ -186,14 +186,62 @@ async function main() {
   console.log('2/4 — products (from src/lib/all_products_catalog.json)...');
   // eslint-disable-next-line @typescript-eslint/no-var-requires
   const allProducts = require('../src/lib/all_products_catalog.json');
-  // Strip the `collection` field — DB doesn't store joined objects
-  const productRows = (allProducts as any[]).map(({ collection, ...rest }) => rest);
+  const productRows = (allProducts as any[]).map((p) => {
+    let colId = p.collection_id;
+    if (!['col-platinum', 'col-gold', 'col-silver', 'col-essentials'].includes(colId)) {
+      const tierLower = (p.tier || '').toLowerCase();
+      if (tierLower.includes('platinum')) colId = 'col-platinum';
+      else if (tierLower.includes('gold')) colId = 'col-gold';
+      else if (tierLower.includes('silver')) colId = 'col-silver';
+      else colId = 'col-essentials';
+    }
+
+    const acf_meta = {
+      ...(p.acf_meta || {}),
+      wp_id: p.wp_id,
+      categories: p.categories,
+      tags: p.tags,
+      tier: p.tier,
+      attributes: p.attributes,
+      stock_quantity: p.stock_quantity,
+    };
+    return {
+      id: p.id,
+      slug: p.slug,
+      title: p.title,
+      collection_id: colId,
+      base_price_gbp: p.base_price_gbp || 0,
+      regular_price_gbp: p.regular_price_gbp || p.base_price_gbp || 0,
+      sale_price_gbp: p.sale_price_gbp || null,
+      description: p.description || '',
+      featured_image_url: p.featured_image_url || '',
+      gallery_images: p.gallery_images || [],
+      stock_status: p.stock_status || 'made_to_order',
+      is_featured: !!p.is_featured,
+      lead_time_weeks: p.lead_time_weeks || 4,
+      category: p.category || p.categories?.[0] || 'Prince Coats',
+      acf_meta: acf_meta,
+    };
+  });
   await upsert('products', productRows);
   console.log(`  ✓ ${productRows.length} products`);
 
   console.log('3/4 — journal posts...');
-  await upsert('journal_posts', JOURNAL_POSTS);
-  console.log(`  ✓ ${JOURNAL_POSTS.length} journal posts`);
+  const journalRows = JOURNAL_POSTS.map((j) => ({
+    id: j.id,
+    slug: j.slug,
+    title: j.title,
+    excerpt: j.excerpt,
+    content_markdown: (j as any).content_markdown || (j as any).content || '',
+    featured_image_url: j.featured_image_url,
+    author_name: j.author_name || 'Daroodi Master Stylist',
+    category: j.category || 'Sartorial Heritage',
+    read_time_mins: j.read_time_mins || 5,
+    status: j.status || 'published',
+    published_at: j.published_at ? new Date(j.published_at).toISOString() : new Date().toISOString(),
+  }));
+  await upsert('journal_posts', journalRows);
+  console.log(`  ✓ ${journalRows.length} journal posts`);
 
   console.log('4/4 — super_admin auth user...');
   const adminEmail = process.env.ADMIN_EMAIL || 'admin@daroodi.com';
