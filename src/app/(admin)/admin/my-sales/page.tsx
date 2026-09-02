@@ -1,19 +1,49 @@
 'use client';
 
-import React from 'react';
-import { useAuth } from '@/context/AuthContext';
-import { INITIAL_COMMISSIONS, INITIAL_ORDERS } from '@/lib/mockData';
+import React, { useEffect, useState } from 'react';
+import { getOrders } from '@/lib/db/orders';
+import { Order } from '@/lib/types';
+import { AuthUser } from '@/lib/auth';
 import { TrendingUp, DollarSign, Copy, CheckCircle, ArrowRight } from 'lucide-react';
 
 export default function MySalesPartnerPage() {
-  const { currentUser } = useAuth();
-  const agentId = currentUser?.id || 'user-agent-london';
+  const [currentUser, setCurrentUser] = useState<AuthUser | null>(null);
+  const [orders, setOrders] = useState<Order[]>([]);
+  const [loading, setLoading] = useState(true);
 
-  const myCommissions = INITIAL_COMMISSIONS.filter((c) => c.recipient_id === agentId);
-  const totalEarned = myCommissions.reduce((acc, c) => acc + c.commission_amount, 0);
-  const approvedEarned = myCommissions.filter((c) => c.status === 'approved').reduce((acc, c) => acc + c.commission_amount, 0);
+  useEffect(() => {
+    let cancelled = false;
+    (async () => {
+      try {
+        setLoading(true);
+        const [meRes, allOrders] = await Promise.all([
+          fetch('/api/auth/me', { cache: 'no-store' }).then((r) => r.json()),
+          getOrders(),
+        ]);
+        if (!cancelled) {
+          setCurrentUser(meRes.user || null);
+          setOrders(allOrders);
+        }
+      } catch (err) {
+        if (!cancelled) console.error('MySales: failed to load', err);
+      } finally {
+        if (!cancelled) setLoading(false);
+      }
+    })();
+    return () => {
+      cancelled = true;
+    };
+  }, []);
 
-  const referralCode = currentUser?.email.split('@')[0] || 'daroodi_partner';
+  const agentId = currentUser?.id || '';
+
+  // No commissions db module yet — derive a referral count from orders attributed to this agent.
+  const myOrders = orders.filter((o) => o.agent_id === agentId);
+  const myCommissions = myOrders; // placeholder shape; commissions arrive when db module lands
+  const totalEarned = 0; // pending commissions db
+  const approvedEarned = 0; // pending commissions db
+
+  const referralCode = currentUser?.email?.split('@')[0] || 'daroodi_partner';
   const referralLink = `https://daroodi.com/?ref=${referralCode}`;
 
   const handleCopyLink = () => {
@@ -35,7 +65,7 @@ export default function MySalesPartnerPage() {
           Welcome, {currentUser?.full_name}
         </h1>
         <p style={{ color: 'var(--slate-500)', fontSize: '0.9rem' }}>
-          Assigned Territory: <strong>{currentUser?.assigned_country || 'UK'} ({currentUser?.assigned_region || 'London'})</strong> · Base Commission Rate: <strong>{((currentUser?.commission_rate || 0.15) * 100).toFixed(0)}%</strong>
+          Assigned Territory: <strong>Global / HQ</strong> · Base Commission Rate: <strong>15%</strong>
         </p>
       </div>
 

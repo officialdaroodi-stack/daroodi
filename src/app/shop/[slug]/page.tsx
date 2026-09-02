@@ -3,7 +3,8 @@
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'next/navigation';
 import Link from 'next/link';
-import { INITIAL_PRODUCTS } from '@/lib/mockData';
+import { getProductBySlug, getProducts } from '@/lib/db';
+import { Product } from '@/lib/types';
 import { useCart } from '@/context/CartContext';
 import { CustomMeasurements } from '@/lib/types';
 import { trackEvent } from '@/lib/analytics';
@@ -29,9 +30,42 @@ export default function SingleProductPage() {
   const { addToCart } = useCart();
   const slug = params?.slug as string;
 
-  const product = INITIAL_PRODUCTS.find((p) => p.slug === slug) || INITIAL_PRODUCTS[0];
+  // Data fetched from Supabase
+  const [product, setProduct] = useState<Product | null>(null);
+  const [relatedProducts, setRelatedProducts] = useState<Product[]>([]);
+  const [bestDeals, setBestDeals] = useState<Product[]>([]);
+  const [loading, setLoading] = useState(true);
 
-  const [activeImage, setActiveImage] = useState(product.featured_image_url || FALLBACK_IMAGE);
+  useEffect(() => {
+    let cancelled = false;
+    (async () => {
+      try {
+        setLoading(true);
+        const fetched = await getProductBySlug(slug);
+        if (cancelled) return;
+        setProduct(fetched);
+
+        const all = await getProducts();
+        if (cancelled) return;
+        if (fetched) {
+          setRelatedProducts(all.filter((p) => p.id !== fetched.id).slice(0, 4));
+          setBestDeals(all.slice(1, 5));
+        } else {
+          setRelatedProducts([]);
+          setBestDeals(all.slice(0, 4));
+        }
+      } catch (err) {
+        console.error('Failed to load product', err);
+      } finally {
+        if (!cancelled) setLoading(false);
+      }
+    })();
+    return () => {
+      cancelled = true;
+    };
+  }, [slug]);
+
+  const [activeImage, setActiveImage] = useState<string>(FALLBACK_IMAGE);
 
   React.useEffect(() => {
     if (product?.featured_image_url) {
@@ -54,10 +88,10 @@ export default function SingleProductPage() {
       });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [product.id]);
+  }, [product?.id]);
   const [selectedSize, setSelectedSize] = useState<string>('M');
   const [selectedColor, setSelectedColor] = useState<string>(
-    product.acf_meta?.product_colors?.[0]?.name || 'Imperial Emerald'
+    product?.acf_meta?.product_colors?.[0]?.name || 'Imperial Emerald'
   );
   const [isCustomSizing, setIsCustomSizing] = useState(false);
   const [selectedPackIndex, setSelectedPackIndex] = useState(0);
@@ -80,11 +114,6 @@ export default function SingleProductPage() {
   const [showChatSubmenu, setShowChatSubmenu] = useState(false);
   const [showShareSubmenu, setShowShareSubmenu] = useState(false);
 
-  // Bundle Pricing Multiplier
-  const packPriceAddon = selectedPackIndex === 1 ? 200 : selectedPackIndex === 2 ? 430 : 0;
-  const basePrice = product.sale_price_gbp || product.base_price_gbp;
-  const currentPrice = basePrice + packPriceAddon;
-
   // Custom Measurements State
   const [measurements, setMeasurements] = useState<CustomMeasurements>({
     chest: 40,
@@ -96,24 +125,6 @@ export default function SingleProductPage() {
     fit_preference: 'tailored',
     special_notes: '',
   });
-
-  const handleAddToCart = () => {
-    addToCart(
-      product,
-      1,
-      isCustomSizing ? 'Custom Bespoke' : selectedSize,
-      selectedColor,
-      isCustomSizing,
-      isCustomSizing ? measurements : undefined
-    );
-    alert(`Added "${product.title}" to your Shopping Bag!`);
-  };
-
-  // 4 Related Products
-  const relatedProducts = INITIAL_PRODUCTS.filter((p) => p.id !== product.id).slice(0, 4);
-
-  // 4 Best Deal Curated Complements
-  const bestDeals = INITIAL_PRODUCTS.slice(1, 5);
 
   // 4 Journal Style Articles
   const journalPosts = [
@@ -142,6 +153,54 @@ export default function SingleProductPage() {
       slug: 'taking-perfect-body-measurements',
     },
   ];
+
+  // Loading skeleton — shown while data is being fetched or product is missing
+  if (loading || !product) {
+    return (
+      <div className="daroodi-sp-wrapper">
+        <div style={{ padding: '40px 20px', textAlign: 'center', color: 'var(--daroodi-gray)' }}>
+          <div
+            style={{
+              display: 'grid',
+              gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))',
+              gap: '20px',
+              maxWidth: '1200px',
+              margin: '0 auto',
+            }}
+          >
+            {[1, 2, 3].map((i) => (
+              <div
+                key={i}
+                style={{
+                  height: '320px',
+                  background: '#F0ECE4',
+                  borderRadius: '16px',
+                  animation: 'pulse 1.5s ease-in-out infinite',
+                }}
+              />
+            ))}
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // Bundle Pricing Multiplier
+  const packPriceAddon = selectedPackIndex === 1 ? 200 : selectedPackIndex === 2 ? 430 : 0;
+  const basePrice = product.sale_price_gbp || product.base_price_gbp;
+  const currentPrice = basePrice + packPriceAddon;
+
+  const handleAddToCart = () => {
+    addToCart(
+      product,
+      1,
+      isCustomSizing ? 'Custom Bespoke' : selectedSize,
+      selectedColor,
+      isCustomSizing,
+      isCustomSizing ? measurements : undefined
+    );
+    alert(`Added "${product.title}" to your Shopping Bag!`);
+  };
 
   return (
     <div className="daroodi-sp-wrapper">

@@ -1,12 +1,44 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
-import { INITIAL_PRODUCTS, INITIAL_COLLECTIONS, INITIAL_JOURNAL_POSTS } from '@/lib/mockData';
+import { getProducts, getJournalPosts } from '@/lib/db';
+import { Product, JournalPost } from '@/lib/types';
 import { Search, Compass, Sparkles, BookOpen, Layers, ShieldCheck, ChevronRight } from 'lucide-react';
+
+// Static collection tiers (no getCollections db module yet — preserved from initial design)
+const SITEMAP_COLLECTIONS = [
+  { id: 'platinum', title: 'Platinum Collection', tier: 'Platinum', price_range_label: '£4,500 – £12,000+ · Royal Atelier Tier' },
+  { id: 'gold', title: 'Gold Collection', tier: 'Gold', price_range_label: '£1,800 – £4,200 · Heirloom Tier' },
+  { id: 'silver', title: 'Silver Collection', tier: 'Silver', price_range_label: '£900 – £1,750 · Ceremonial Tier' },
+  { id: 'essentials', title: 'Essentials', tier: 'Essentials', price_range_label: '£450 – £850 · Everyday Refined Tier' },
+];
 
 export default function StylishHTMLSitemap() {
   const [searchQuery, setSearchQuery] = useState('');
+  const [products, setProducts] = useState<Product[]>([]);
+  const [journalPosts, setJournalPosts] = useState<JournalPost[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    let cancelled = false;
+    (async () => {
+      try {
+        const [prods, posts] = await Promise.all([getProducts(), getJournalPosts()]);
+        if (cancelled) return;
+        setProducts(prods);
+        // Filter to only published journal posts on the public-facing sitemap
+        setJournalPosts(posts.filter((p) => !p.status || p.status === 'published'));
+      } catch (err) {
+        console.error('Failed to load sitemap data', err);
+      } finally {
+        if (!cancelled) setLoading(false);
+      }
+    })();
+    return () => {
+      cancelled = true;
+    };
+  }, []);
 
   const staticLinks = [
     { title: 'Home Page', url: '/', desc: 'Daroodi bespoke luxury atelier flagship home' },
@@ -103,7 +135,7 @@ export default function StylishHTMLSitemap() {
               </h2>
             </div>
             <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'flex', flexDirection: 'column', gap: '10px' }}>
-              {INITIAL_COLLECTIONS.filter(c => filterItem(c.title) || filterItem(c.description)).map((col) => (
+              {SITEMAP_COLLECTIONS.filter(c => filterItem(c.title) || filterItem(c.price_range_label)).map((col) => (
                 <li key={col.id}>
                   <Link
                     href={`/collections`}
@@ -139,28 +171,32 @@ export default function StylishHTMLSitemap() {
               </h2>
             </div>
             <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'flex', flexDirection: 'column', gap: '10px' }}>
-              {INITIAL_PRODUCTS.filter(p => filterItem(p.title) || filterItem(p.description)).map((prod) => (
-                <li key={prod.id}>
-                  <Link
-                    href={`/shop/${prod.slug}`}
-                    style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '10px 14px', borderRadius: '10px', textDecoration: 'none', color: '#162923', background: '#F8F6F3', transition: 'all 0.2s' }}
-                    onMouseOver={(e) => {
-                      e.currentTarget.style.background = '#162923';
-                      e.currentTarget.style.color = '#C9A84C';
-                    }}
-                    onMouseOut={(e) => {
-                      e.currentTarget.style.background = '#F8F6F3';
-                      e.currentTarget.style.color = '#162923';
-                    }}
-                  >
-                    <div>
-                      <strong style={{ fontSize: '13px', display: 'block' }}>{prod.title}</strong>
-                      <span style={{ fontSize: '11px', opacity: 0.8 }}>£{prod.base_price_gbp.toFixed(2)} · {prod.acf_meta?.embroidery_hours || 100}h needlework</span>
-                    </div>
-                    <ChevronRight size={16} />
-                  </Link>
-                </li>
-              ))}
+              {loading && products.length === 0 ? (
+                <li style={{ padding: '10px 14px', fontSize: '12px', color: '#999' }}>Loading garments…</li>
+              ) : (
+                products.filter(p => filterItem(p.title) || filterItem(p.description)).map((prod) => (
+                  <li key={prod.id}>
+                    <Link
+                      href={`/shop/${prod.slug}`}
+                      style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '10px 14px', borderRadius: '10px', textDecoration: 'none', color: '#162923', background: '#F8F6F3', transition: 'all 0.2s' }}
+                      onMouseOver={(e) => {
+                        e.currentTarget.style.background = '#162923';
+                        e.currentTarget.style.color = '#C9A84C';
+                      }}
+                      onMouseOut={(e) => {
+                        e.currentTarget.style.background = '#F8F6F3';
+                        e.currentTarget.style.color = '#162923';
+                      }}
+                    >
+                      <div>
+                        <strong style={{ fontSize: '13px', display: 'block' }}>{prod.title}</strong>
+                        <span style={{ fontSize: '11px', opacity: 0.8 }}>£{prod.base_price_gbp.toFixed(2)} · {prod.acf_meta?.embroidery_hours || 100}h needlework</span>
+                      </div>
+                      <ChevronRight size={16} />
+                    </Link>
+                  </li>
+                ))
+              )}
             </ul>
           </div>
 
@@ -173,7 +209,7 @@ export default function StylishHTMLSitemap() {
               </h2>
             </div>
             <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'flex', flexDirection: 'column', gap: '10px' }}>
-              {INITIAL_JOURNAL_POSTS.filter(j => filterItem(j.title) || filterItem(j.excerpt)).map((post) => (
+              {journalPosts.filter(j => filterItem(j.title) || filterItem(j.excerpt)).map((post) => (
                 <li key={post.id}>
                   <Link
                     href={`/journal/${post.slug}`}
@@ -189,7 +225,7 @@ export default function StylishHTMLSitemap() {
                   >
                     <div>
                       <strong style={{ fontSize: '13px', display: 'block' }}>{post.title}</strong>
-                      <span style={{ fontSize: '11px', opacity: 0.8 }}>{post.read_time_minutes || 5} min read · {post.author || 'Atelier'}</span>
+                      <span style={{ fontSize: '11px', opacity: 0.8 }}>{post.read_time_minutes || post.read_time_mins || 5} min read · {post.author || post.author_name || 'Atelier'}</span>
                     </div>
                     <ChevronRight size={16} />
                   </Link>

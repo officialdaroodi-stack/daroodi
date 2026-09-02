@@ -1,9 +1,9 @@
 import { MetadataRoute } from 'next';
-import { INITIAL_PRODUCTS, INITIAL_COLLECTIONS, INITIAL_JOURNAL_POSTS } from '@/lib/mockData';
+import { createClient } from '@/lib/supabase/server';
 
 const BASE_URL = 'https://daroodi.com';
 
-export default function sitemap(): MetadataRoute.Sitemap {
+export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const now = new Date();
 
   // Static Core Pages
@@ -18,16 +18,36 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { url: `${BASE_URL}/sitemap`, lastModified: now, changeFrequency: 'weekly', priority: 0.7 },
   ];
 
+  // Server-side Supabase queries
+  const supabase = await createClient();
+
   // Dynamic Product Pages
-  const productPages: MetadataRoute.Sitemap = INITIAL_PRODUCTS.map((prod) => ({
+  const { data: productsData, error: productsError } = await supabase
+    .from('products')
+    .select('slug, updated_at, created_at');
+
+  if (productsError) {
+    console.error('sitemap: failed to load products', productsError);
+  }
+
+  const productPages: MetadataRoute.Sitemap = (productsData || []).map((prod: any) => ({
     url: `${BASE_URL}/shop/${prod.slug}`,
     lastModified: new Date(prod.updated_at || prod.created_at || now),
     changeFrequency: 'weekly',
     priority: 0.9,
   }));
 
-  // Dynamic Journal Articles
-  const journalPages: MetadataRoute.Sitemap = INITIAL_JOURNAL_POSTS.map((post) => ({
+  // Dynamic Journal Articles — only include published posts on the public sitemap
+  const { data: journalData, error: journalError } = await supabase
+    .from('journal_posts')
+    .select('slug, published_at, status')
+    .eq('status', 'published');
+
+  if (journalError) {
+    console.error('sitemap: failed to load journal posts', journalError);
+  }
+
+  const journalPages: MetadataRoute.Sitemap = (journalData || []).map((post: any) => ({
     url: `${BASE_URL}/journal/${post.slug}`,
     lastModified: new Date(post.published_at || now),
     changeFrequency: 'monthly',

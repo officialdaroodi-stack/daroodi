@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
-import { INITIAL_ORDERS } from '@/lib/mockData';
+import { createClient } from '@/lib/supabase/client';
 import { Order, OrderStatus } from '@/lib/types';
 import { Search, Clock, Scissors, ShieldCheck, Truck, PackageCheck, HelpCircle, ArrowRight } from 'lucide-react';
 import Link from 'next/link';
@@ -11,6 +11,7 @@ export default function TrackOrderPage() {
   const [activeOrder, setActiveOrder] = useState<Order | null>(null);
   const [searched, setSearched] = useState(false);
   const [errorMsg, setErrorMsg] = useState('');
+  const [searching, setSearching] = useState(false);
 
   const STAGES: { key: OrderStatus; label: string; icon: any; description: string }[] = [
     { key: 'pending', label: 'Order Confirmed', icon: Clock, description: 'Fabric allocation & initial pattern creation' },
@@ -23,31 +24,66 @@ export default function TrackOrderPage() {
 
   const currentStageIndex = activeOrder ? STAGES.findIndex((s) => s.key === activeOrder.status) : -1;
 
-  const handleSearch = (e: React.FormEvent) => {
+  const handleSearch = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!orderQuery.trim()) {
+    const trimmedQuery = orderQuery.trim();
+    if (!trimmedQuery) {
       setErrorMsg('Please enter your Order ID or email address.');
       setActiveOrder(null);
       setSearched(true);
       return;
     }
 
-    const trimmed = orderQuery.trim().toLowerCase();
-    const found = INITIAL_ORDERS.find(
-      (o) =>
-        o.order_number.toLowerCase() === trimmed ||
-        o.client_email?.toLowerCase() === trimmed ||
-        o.customer?.email?.toLowerCase() === trimmed ||
-        o.id.toLowerCase() === trimmed
-    );
-
     setSearched(true);
-    if (found) {
-      setActiveOrder(found);
-      setErrorMsg('');
-    } else {
-      setActiveOrder(null);
-      setErrorMsg(`No active orders found matching "${orderQuery.trim()}". Please check your confirmation receipt or reach out to our concierge.`);
+    setSearching(true);
+    setErrorMsg('');
+    setActiveOrder(null);
+
+    try {
+      const supabase = createClient();
+      const trimmed = trimmedQuery.toLowerCase();
+
+      // Primary lookup by exact order_number
+      let { data: found, error } = await supabase
+        .from('orders')
+        .select('*')
+        .eq('order_number', trimmedQuery)
+        .maybeSingle();
+
+      // Fallback: lookup by client_email if order_number didn't match
+      if (!found && !error && trimmed.includes('@')) {
+        const emailRes = await supabase
+          .from('orders')
+          .select('*')
+          .ilike('client_email', trimmed)
+          .order('created_at', { ascending: false })
+          .limit(1)
+          .maybeSingle();
+        if (emailRes.data) found = emailRes.data;
+      }
+
+      // Fallback: lookup by id if it looks like a UUID
+      if (!found) {
+        const idRes = await supabase
+          .from('orders')
+          .select('*')
+          .eq('id', trimmedQuery)
+          .maybeSingle();
+        if (idRes.data) found = idRes.data;
+      }
+
+      if (found) {
+        setActiveOrder(found as unknown as Order);
+        setErrorMsg('');
+      } else {
+        setActiveOrder(null);
+        setErrorMsg(`No active orders found matching "${trimmedQuery}". Please check your confirmation receipt or reach out to our concierge.`);
+      }
+    } catch (err) {
+      console.error('Order lookup failed', err);
+      setErrorMsg(`No active orders found matching "${trimmedQuery}". Please check your confirmation receipt or reach out to our concierge.`);
+    } finally {
+      setSearching(false);
     }
   };
 
@@ -86,8 +122,8 @@ export default function TrackOrderPage() {
             outline: 'none',
           }}
         />
-        <button type="submit" className="btn-3d-primary" style={{ padding: '13px 22px', whiteSpace: 'nowrap' }}>
-          Track <Search size={16} />
+        <button type="submit" disabled={searching} className="btn-3d-primary" style={{ padding: '13px 22px', whiteSpace: 'nowrap' }}>
+          {searching ? 'Searching…' : 'Track'} <Search size={16} />
         </button>
       </form>
 

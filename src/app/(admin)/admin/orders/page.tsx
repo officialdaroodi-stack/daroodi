@@ -1,20 +1,60 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
-import { INITIAL_ORDERS } from '@/lib/mockData';
+import { getOrders, updateOrderStatus } from '@/lib/db/orders';
 import { Order, OrderStatus } from '@/lib/types';
-import { ShoppingBag, Eye, Scissors, Filter, CheckCircle2 } from 'lucide-react';
+import { Eye, Scissors } from 'lucide-react';
 
 export default function AdminOrdersPage() {
-  const [orders, setOrders] = useState<Order[]>(INITIAL_ORDERS);
+  const [orders, setOrders] = useState<Order[]>([]);
   const [filterStatus, setFilterStatus] = useState<string>('all');
+  const [loading, setLoading] = useState(true);
+  const [updatingId, setUpdatingId] = useState<string | null>(null);
 
-  const handleStatusChange = (orderId: string, newStatus: OrderStatus) => {
+  useEffect(() => {
+    let cancelled = false;
+
+    async function load() {
+      try {
+        const data = await getOrders();
+        if (cancelled) return;
+        setOrders(data);
+      } catch (err) {
+        console.error('Failed to load orders:', err);
+      } finally {
+        if (!cancelled) setLoading(false);
+      }
+    }
+
+    load();
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
+  const handleStatusChange = async (orderId: string, newStatus: OrderStatus) => {
+    // Optimistic update
     setOrders((prev) =>
       prev.map((o) => (o.id === orderId ? { ...o, status: newStatus } : o))
     );
-    alert(`Order ${orderId} updated to: ${newStatus.replace('_', ' ').toUpperCase()}`);
+    setUpdatingId(orderId);
+    try {
+      await updateOrderStatus(orderId, newStatus);
+      alert(`Order ${orderId} updated to: ${newStatus.replace('_', ' ').toUpperCase()}`);
+    } catch (err) {
+      console.error('Failed to update order status:', err);
+      alert(`Failed to update order ${orderId}. Please try again.`);
+      // Revert optimistic update by re-fetching
+      try {
+        const data = await getOrders();
+        setOrders(data);
+      } catch (reloadErr) {
+        console.error('Failed to reload orders after error:', reloadErr);
+      }
+    } finally {
+      setUpdatingId(null);
+    }
   };
 
   const STATUS_OPTIONS: OrderStatus[] = [
@@ -76,69 +116,85 @@ export default function AdminOrdersPage() {
               </tr>
             </thead>
             <tbody>
-              {filteredOrders.map((ord) => (
-                <tr key={ord.id}>
-                  <td>
-                    <strong style={{ color: 'var(--green-900)' }}>{ord.order_number}</strong>
-                    <div style={{ fontSize: '0.72rem', color: 'var(--slate-500)' }}>
-                      {new Date(ord.created_at).toLocaleDateString()}
-                    </div>
-                  </td>
-                  <td>
-                    <div>{ord.shipping_address.full_name}</div>
-                    <div style={{ fontSize: '0.75rem', color: 'var(--slate-500)' }}>{ord.shipping_address.email}</div>
-                    <div style={{ fontSize: '0.75rem', color: 'var(--slate-500)' }}>{ord.shipping_address.city}, {ord.shipping_address.country}</div>
-                  </td>
-                  <td>
-                    <strong>{ord.items?.[0]?.product?.title}</strong>
-                    <div style={{ fontSize: '0.75rem', color: 'var(--green-700)', fontWeight: 600 }}>
-                      Size: {ord.items?.[0]?.selected_size}
-                    </div>
-                  </td>
-                  <td>
-                    {ord.measurements ? (
-                      <span style={{ fontSize: '0.75rem', background: '#E8F5E9', color: '#1B5E20', padding: '3px 8px', borderRadius: '4px', fontWeight: 600, display: 'inline-flex', alignItems: 'center', gap: '4px' }}>
-                        <Scissors size={12} /> {ord.measurements.chest}&quot; C / {ord.measurements.shoulder}&quot; S / {ord.measurements.waist}&quot; W
-                      </span>
-                    ) : (
-                      <span style={{ fontSize: '0.75rem', color: 'var(--slate-400)' }}>Standard Size</span>
-                    )}
-                  </td>
-                  <td>
-                    <strong>£{ord.grand_total}</strong>
-                  </td>
-                  <td>
-                    <select
-                      value={ord.status}
-                      onChange={(e) => handleStatusChange(ord.id, e.target.value as OrderStatus)}
-                      style={{
-                        padding: '6px 10px',
-                        borderRadius: '6px',
-                        border: '1px solid var(--cream-300)',
-                        fontSize: '0.78rem',
-                        fontWeight: 700,
-                        background: 'var(--cream-50)',
-                        cursor: 'pointer',
-                      }}
-                    >
-                      {STATUS_OPTIONS.map((st) => (
-                        <option key={st} value={st}>
-                          {st.replace('_', ' ').toUpperCase()}
-                        </option>
-                      ))}
-                    </select>
-                  </td>
-                  <td>
-                    <Link
-                      href={`/admin/orders/${ord.id}`}
-                      className="btn-3d-secondary"
-                      style={{ padding: '6px 12px', fontSize: '0.75rem' }}
-                    >
-                      <Eye size={14} /> Full Spec
-                    </Link>
+              {loading ? (
+                <tr>
+                  <td colSpan={7} style={{ textAlign: 'center', padding: '24px', color: 'var(--slate-500)' }}>
+                    Loading orders from Supabase…
                   </td>
                 </tr>
-              ))}
+              ) : filteredOrders.length === 0 ? (
+                <tr>
+                  <td colSpan={7} style={{ textAlign: 'center', padding: '24px', color: 'var(--slate-500)' }}>
+                    No orders found for this filter.
+                  </td>
+                </tr>
+              ) : (
+                filteredOrders.map((ord) => (
+                  <tr key={ord.id}>
+                    <td>
+                      <strong style={{ color: 'var(--green-900)' }}>{ord.order_number}</strong>
+                      <div style={{ fontSize: '0.72rem', color: 'var(--slate-500)' }}>
+                        {new Date(ord.created_at).toLocaleDateString()}
+                      </div>
+                    </td>
+                    <td>
+                      <div>{ord.shipping_address.full_name}</div>
+                      <div style={{ fontSize: '0.75rem', color: 'var(--slate-500)' }}>{ord.shipping_address.email}</div>
+                      <div style={{ fontSize: '0.75rem', color: 'var(--slate-500)' }}>{ord.shipping_address.city}, {ord.shipping_address.country}</div>
+                    </td>
+                    <td>
+                      <strong>{ord.items?.[0]?.product?.title}</strong>
+                      <div style={{ fontSize: '0.75rem', color: 'var(--green-700)', fontWeight: 600 }}>
+                        Size: {ord.items?.[0]?.selected_size}
+                      </div>
+                    </td>
+                    <td>
+                      {ord.measurements ? (
+                        <span style={{ fontSize: '0.75rem', background: '#E8F5E9', color: '#1B5E20', padding: '3px 8px', borderRadius: '4px', fontWeight: 600, display: 'inline-flex', alignItems: 'center', gap: '4px' }}>
+                          <Scissors size={12} /> {ord.measurements.chest}&quot; C / {ord.measurements.shoulder}&quot; S / {ord.measurements.waist}&quot; W
+                        </span>
+                      ) : (
+                        <span style={{ fontSize: '0.75rem', color: 'var(--slate-400)' }}>Standard Size</span>
+                      )}
+                    </td>
+                    <td>
+                      <strong>£{ord.grand_total}</strong>
+                    </td>
+                    <td>
+                      <select
+                        value={ord.status}
+                        disabled={updatingId === ord.id}
+                        onChange={(e) => handleStatusChange(ord.id, e.target.value as OrderStatus)}
+                        style={{
+                          padding: '6px 10px',
+                          borderRadius: '6px',
+                          border: '1px solid var(--cream-300)',
+                          fontSize: '0.78rem',
+                          fontWeight: 700,
+                          background: 'var(--cream-50)',
+                          cursor: updatingId === ord.id ? 'wait' : 'pointer',
+                          opacity: updatingId === ord.id ? 0.6 : 1,
+                        }}
+                      >
+                        {STATUS_OPTIONS.map((st) => (
+                          <option key={st} value={st}>
+                            {st.replace('_', ' ').toUpperCase()}
+                          </option>
+                        ))}
+                      </select>
+                    </td>
+                    <td>
+                      <Link
+                        href={`/admin/orders/${ord.id}`}
+                        className="btn-3d-secondary"
+                        style={{ padding: '6px 12px', fontSize: '0.75rem' }}
+                      >
+                        <Eye size={14} /> Full Spec
+                      </Link>
+                    </td>
+                  </tr>
+                ))
+              )}
             </tbody>
           </table>
         </div>

@@ -1,35 +1,86 @@
 'use client';
 
-import React, { useState } from 'react';
-import { useAuth } from '@/context/AuthContext';
-import { UserProfile } from '@/lib/types';
+import React, { useEffect, useState } from 'react';
+import { UserProfile, UserRole } from '@/lib/types';
 import { Globe, UserPlus, Users, ArrowRight, ShieldCheck, MapPin } from 'lucide-react';
 
+function generateTempPassword(): string {
+  const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnpqrstuvwxyz23456789';
+  let out = '';
+  for (let i = 0; i < 14; i++) {
+    out += chars.charAt(Math.floor(Math.random() * chars.length));
+  }
+  return out;
+}
+
 export default function CountryManagersPage() {
-  const { allUsers, createUser } = useAuth();
+  const [allUsers, setAllUsers] = useState<UserProfile[]>([]);
+  const [loading, setLoading] = useState(true);
   const [showAddModal, setShowAddModal] = useState(false);
 
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [country, setCountry] = useState('United Kingdom');
   const [overrideRate, setOverrideRate] = useState(0.05);
+  const [password, setPassword] = useState('');
+
+  const [successMessage, setSuccessMessage] = useState<{ name: string; country: string; email: string; password: string } | null>(null);
+
+  const loadUsers = async () => {
+    setLoading(true);
+    try {
+      const res = await fetch('/api/admin/users', { cache: 'no-store' });
+      const json = await res.json();
+      setAllUsers(json.users || []);
+    } catch (err) {
+      console.error('Country managers: failed to load users', err);
+      setAllUsers([]);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    loadUsers();
+  }, []);
 
   const countryManagers = allUsers.filter((u) => u.role === 'country_sales_manager');
   const regionalAgents = allUsers.filter((u) => u.role === 'regional_sales_agent');
 
-  const handleCreateCountryManager = (e: React.FormEvent) => {
+  const handleCreateCountryManager = async (e: React.FormEvent) => {
     e.preventDefault();
-    createUser({
-      email,
-      full_name: name,
-      role: 'country_sales_manager',
-      assigned_country: country,
-      commission_rate: overrideRate,
-    });
-    alert(`Created Country Sales Head for ${country}: ${name}`);
-    setShowAddModal(false);
-    setName('');
-    setEmail('');
+    const finalPassword = password || generateTempPassword();
+
+    try {
+      const res = await fetch('/api/admin/users', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          email,
+          password: finalPassword,
+          full_name: name,
+          role: 'country_sales_manager' as UserRole,
+        }),
+      });
+
+      if (!res.ok) {
+        const json = await res.json().catch(() => ({}));
+        alert(`Failed to create country head: ${json.error || res.statusText}`);
+        return;
+      }
+
+      setSuccessMessage({ name, country, email, password: finalPassword });
+      setShowAddModal(false);
+      setName('');
+      setEmail('');
+      setPassword('');
+      setCountry('United Kingdom');
+      setOverrideRate(0.05);
+
+      await loadUsers();
+    } catch (err: any) {
+      alert(`Failed to create country head: ${err?.message || 'Network error'}`);
+    }
   };
 
   return (
@@ -46,6 +97,41 @@ export default function CountryManagersPage() {
           <UserPlus size={18} /> Appoint Country Sales Head
         </button>
       </div>
+
+      {/* Success banner */}
+      {successMessage && (
+        <div
+          style={{
+            background: '#E8F5E9',
+            border: '1px solid #1B5E20',
+            color: '#1B5E20',
+            padding: '16px 20px',
+            borderRadius: '12px',
+            marginBottom: '20px',
+            fontSize: '0.88rem',
+          }}
+        >
+          <strong>Created Country Sales Head for {successMessage.country}: {successMessage.name}.</strong>
+          <div style={{ marginTop: '6px', fontSize: '0.82rem' }}>
+            Share these temporary login credentials with the new country head:
+          </div>
+          <div style={{ marginTop: '8px', display: 'flex', flexWrap: 'wrap', gap: '12px', alignItems: 'center' }}>
+            <code style={{ background: '#FFFFFF', border: '1px solid #1B5E20', padding: '4px 10px', borderRadius: '6px', color: '#162923' }}>
+              {successMessage.email}
+            </code>
+            <code style={{ background: '#FFFFFF', border: '1px solid #1B5E20', padding: '4px 10px', borderRadius: '6px', color: '#162923', fontWeight: 700 }}>
+              {successMessage.password}
+            </code>
+            <button
+              onClick={() => setSuccessMessage(null)}
+              className="btn-3d-secondary"
+              style={{ padding: '4px 12px', fontSize: '0.75rem' }}
+            >
+              Dismiss
+            </button>
+          </div>
+        </div>
+      )}
 
       {/* Country Sales Heads Grid */}
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '24px', marginBottom: '40px' }}>
@@ -89,6 +175,18 @@ export default function CountryManagersPage() {
             </div>
           );
         })}
+
+        {countryManagers.length === 0 && !loading && (
+          <div style={{ gridColumn: '1 / -1', padding: '40px', textAlign: 'center', color: 'var(--slate-500)', fontSize: '0.9rem', background: 'var(--white)', border: '1px dashed var(--cream-300)', borderRadius: 'var(--radius-lg)' }}>
+            No country sales heads yet. Click <strong>Appoint Country Sales Head</strong> to add one.
+          </div>
+        )}
+
+        {loading && (
+          <div style={{ gridColumn: '1 / -1', padding: '40px', textAlign: 'center', color: 'var(--slate-500)', fontSize: '0.9rem' }}>
+            Loading country sales heads…
+          </div>
+        )}
       </div>
 
       {/* Modal: Appoint Country Head */}
@@ -119,6 +217,17 @@ export default function CountryManagersPage() {
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   style={{ width: '100%', padding: '10px', borderRadius: '8px', border: '1px solid var(--cream-300)', marginTop: '4px' }}
+                />
+              </div>
+
+              <div>
+                <label style={{ fontSize: '0.82rem', fontWeight: 700 }}>Initial Password</label>
+                <input
+                  type="text"
+                  placeholder="Leave blank to auto-generate a temporary password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  style={{ width: '100%', padding: '10px', borderRadius: '8px', border: '1px solid var(--cream-300)', marginTop: '4px', fontFamily: 'monospace' }}
                 />
               </div>
 

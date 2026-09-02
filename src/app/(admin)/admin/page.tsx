@@ -1,31 +1,61 @@
 'use client';
 
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
-import { useAuth } from '@/context/AuthContext';
-import { INITIAL_ORDERS, INITIAL_PRODUCTS, INITIAL_COMMISSIONS } from '@/lib/mockData';
+import { AuthUser } from '@/lib/auth';
+import { getProducts } from '@/lib/db/products';
+import { getOrders } from '@/lib/db/orders';
+import { Order, Product } from '@/lib/types';
 import { getRoleDisplayName } from '@/lib/rbac';
 import {
   DollarSign,
   ShoppingBag,
   Scissors,
-  Users,
   TrendingUp,
-  Package,
   ArrowRight,
-  ShieldCheck,
-  CheckCircle,
 } from 'lucide-react';
 
 export default function AdminDashboardOverview() {
-  const { currentUser } = useAuth();
+  const [currentUser, setCurrentUser] = useState<AuthUser | null>(null);
+  const [orders, setOrders] = useState<Order[]>([]);
+  const [products, setProducts] = useState<Product[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    let cancelled = false;
+
+    async function load() {
+      try {
+        const [meRes, ordersData, productsData] = await Promise.all([
+          fetch('/api/auth/me', { cache: 'no-store' }).then((r) => r.json()),
+          getOrders(),
+          getProducts(),
+        ]);
+        if (cancelled) return;
+        setCurrentUser(meRes.user || null);
+        setOrders(ordersData);
+        setProducts(productsData);
+      } catch (err) {
+        console.error('Failed to load admin overview data:', err);
+      } finally {
+        if (!cancelled) setLoading(false);
+      }
+    }
+
+    load();
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
   const role = currentUser?.role || 'super_admin';
 
   // Calculate Metrics
-  const totalRevenue = INITIAL_ORDERS.reduce((acc, o) => acc + o.grand_total, 0);
-  const inTailoringCount = INITIAL_ORDERS.filter((o) => o.status === 'in_tailoring').length;
-  const pendingApprovals = INITIAL_COMMISSIONS.filter((c) => c.status === 'pending_approval');
-  const pendingApprovalAmount = pendingApprovals.reduce((acc, c) => acc + c.commission_amount, 0);
+  const totalRevenue = orders.reduce((acc, o) => acc + (o.grand_total || 0), 0);
+  const inTailoringCount = orders.filter((o) => o.status === 'in_tailoring').length;
+  // Pending payouts: no commission data wired up yet — show count of pending orders as a proxy
+  const pendingPayoutCount = orders.filter((o) => o.status === 'pending').length;
+  const hasPendingPayouts = pendingPayoutCount > 0;
 
   return (
     <div>
@@ -84,7 +114,7 @@ export default function AdminDashboardOverview() {
             <ShoppingBag size={24} />
           </div>
           <div>
-            <div className="stat-value">{INITIAL_ORDERS.length}</div>
+            <div className="stat-value">{orders.length}</div>
             <div className="stat-label">Active Orders</div>
           </div>
         </div>
@@ -104,8 +134,12 @@ export default function AdminDashboardOverview() {
             <TrendingUp size={24} />
           </div>
           <div>
-            <div className="stat-value">£{pendingApprovalAmount.toFixed(2)}</div>
-            <div className="stat-label">Pending Commission Payouts</div>
+            <div className="stat-value">
+              {hasPendingPayouts ? `${pendingPayoutCount}` : '£0'}
+            </div>
+            <div className="stat-label">
+              {hasPendingPayouts ? 'Pending Payouts (Orders)' : 'Pending Payouts · No payouts yet'}
+            </div>
           </div>
         </div>
       </div>
@@ -133,46 +167,60 @@ export default function AdminDashboardOverview() {
               </tr>
             </thead>
             <tbody>
-              {INITIAL_ORDERS.map((ord) => (
-                <tr key={ord.id}>
-                  <td>
-                    <strong style={{ color: 'var(--green-900)' }}>{ord.order_number}</strong>
-                    <div style={{ fontSize: '0.75rem', color: 'var(--slate-500)' }}>{ord.order_type.replace('_', ' ')}</div>
-                  </td>
-                  <td>
-                    <div>{ord.shipping_address.full_name}</div>
-                    <div style={{ fontSize: '0.75rem', color: 'var(--slate-500)' }}>{ord.shipping_address.city}, {ord.shipping_address.country}</div>
-                  </td>
-                  <td>
-                    {ord.items?.[0]?.product?.title}
-                    <div style={{ fontSize: '0.75rem', color: 'var(--green-700)', fontWeight: 600 }}>
-                      {ord.items?.[0]?.selected_size}
-                    </div>
-                  </td>
-                  <td>
-                    <strong>£{ord.grand_total}</strong>
-                  </td>
-                  <td>
-                    <span className={`status-pill status-${ord.status}`}>
-                      {ord.status.replace('_', ' ')}
-                    </span>
-                  </td>
-                  <td>
-                    <span style={{ fontSize: '0.78rem', background: '#E8F5E9', color: '#2E7D32', padding: '3px 8px', borderRadius: '4px', fontWeight: 600 }}>
-                      {ord.payment_status}
-                    </span>
-                  </td>
-                  <td>
-                    <Link
-                      href={`/admin/orders/${ord.id}`}
-                      className="btn-3d-secondary"
-                      style={{ padding: '6px 12px', fontSize: '0.75rem' }}
-                    >
-                      Inspect Spec
-                    </Link>
+              {loading ? (
+                <tr>
+                  <td colSpan={7} style={{ textAlign: 'center', padding: '24px', color: 'var(--slate-500)' }}>
+                    Loading live order pipeline…
                   </td>
                 </tr>
-              ))}
+              ) : orders.length === 0 ? (
+                <tr>
+                  <td colSpan={7} style={{ textAlign: 'center', padding: '24px', color: 'var(--slate-500)' }}>
+                    No orders found.
+                  </td>
+                </tr>
+              ) : (
+                orders.map((ord) => (
+                  <tr key={ord.id}>
+                    <td>
+                      <strong style={{ color: 'var(--green-900)' }}>{ord.order_number}</strong>
+                      <div style={{ fontSize: '0.75rem', color: 'var(--slate-500)' }}>{ord.order_type.replace('_', ' ')}</div>
+                    </td>
+                    <td>
+                      <div>{ord.shipping_address.full_name}</div>
+                      <div style={{ fontSize: '0.75rem', color: 'var(--slate-500)' }}>{ord.shipping_address.city}, {ord.shipping_address.country}</div>
+                    </td>
+                    <td>
+                      {ord.items?.[0]?.product?.title}
+                      <div style={{ fontSize: '0.75rem', color: 'var(--green-700)', fontWeight: 600 }}>
+                        {ord.items?.[0]?.selected_size}
+                      </div>
+                    </td>
+                    <td>
+                      <strong>£{ord.grand_total}</strong>
+                    </td>
+                    <td>
+                      <span className={`status-pill status-${ord.status}`}>
+                        {ord.status.replace('_', ' ')}
+                      </span>
+                    </td>
+                    <td>
+                      <span style={{ fontSize: '0.78rem', background: '#E8F5E9', color: '#2E7D32', padding: '3px 8px', borderRadius: '4px', fontWeight: 600 }}>
+                        {ord.payment_status}
+                      </span>
+                    </td>
+                    <td>
+                      <Link
+                        href={`/admin/orders/${ord.id}`}
+                        className="btn-3d-secondary"
+                        style={{ padding: '6px 12px', fontSize: '0.75rem' }}
+                      >
+                        Inspect Spec
+                      </Link>
+                    </td>
+                  </tr>
+                ))
+              )}
             </tbody>
           </table>
         </div>

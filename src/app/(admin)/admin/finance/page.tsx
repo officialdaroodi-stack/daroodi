@@ -1,8 +1,9 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
-import { INITIAL_ORDERS, INITIAL_COMMISSIONS, INITIAL_PAYOUTS } from '@/lib/mockData';
+import { getOrders } from '@/lib/db/orders';
+import { Order, Payout, Commission } from '@/lib/types';
 import {
   DollarSign,
   TrendingUp,
@@ -19,14 +20,49 @@ export default function FinanceOverviewPage() {
   const [timeframe, setTimeframe] = useState<'6m' | '1y' | '30d'>('6m');
   const [hoveredMonth, setHoveredMonth] = useState<number | null>(null);
 
-  const grossRevenue = 18450;
-  const netProfit = 9820;
-  const totalCommissionApproved = INITIAL_COMMISSIONS.filter((c) => c.status === 'approved').reduce((acc, c) => acc + c.commission_amount, 0);
-  const pendingApprovals = INITIAL_COMMISSIONS.filter((c) => c.status === 'pending_approval');
-  const pendingApprovalAmount = pendingApprovals.reduce((acc, c) => acc + c.commission_amount, 0);
-  const totalDisbursed = INITIAL_PAYOUTS.filter((p) => p.status === 'completed').reduce((acc, p) => acc + p.amount, 0);
+  const [orders, setOrders] = useState<Order[]>([]);
+  const [commissions, setCommissions] = useState<Commission[]>([]);
+  const [payouts, setPayouts] = useState<Payout[]>([]);
+  const [loading, setLoading] = useState(true);
 
-  // Revenue chart data
+  useEffect(() => {
+    let cancelled = false;
+    (async () => {
+      try {
+        setLoading(true);
+        const data = await getOrders();
+        if (!cancelled) {
+          setOrders(data);
+          // No commissions/payouts db module yet — fall back to empty lists.
+          setCommissions([]);
+          setPayouts([]);
+        }
+      } catch (err) {
+        if (!cancelled) {
+          console.error('Finance: failed to load orders', err);
+          setOrders([]);
+        }
+      } finally {
+        if (!cancelled) setLoading(false);
+      }
+    })();
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
+  const grossRevenue = orders.reduce((acc, o) => acc + (o.grand_total || 0), 0);
+  const netProfit = Math.round(grossRevenue * 0.536);
+  const totalCommissionApproved = commissions
+    .filter((c) => c.status === 'approved')
+    .reduce((acc, c) => acc + c.commission_amount, 0);
+  const pendingApprovals = commissions.filter((c) => c.status === 'pending_approval');
+  const pendingApprovalAmount = pendingApprovals.reduce((acc, c) => acc + c.commission_amount, 0);
+  const totalDisbursed = payouts
+    .filter((p) => p.status === 'completed')
+    .reduce((acc, p) => acc + p.amount, 0);
+
+  // Revenue chart data (preserved as-is for now — real metrics coming later)
   const chartData = [
     { month: 'Mar', rev: 9200, profit: 4600, orders: 7 },
     { month: 'Apr', rev: 12400, profit: 6200, orders: 10 },
@@ -260,41 +296,47 @@ export default function FinanceOverviewPage() {
           <span style={{ fontSize: '12px', color: '#888' }}>Verified banking transactions</span>
         </div>
 
-        <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left', fontSize: '13px' }}>
-          <thead>
-            <tr style={{ background: '#F8F6F3', borderBottom: '1px solid #E5E0D8' }}>
-              <th style={{ padding: '12px 20px' }}>Recipient / Account</th>
-              <th style={{ padding: '12px 20px' }}>Disbursed Amount</th>
-              <th style={{ padding: '12px 20px' }}>Channel</th>
-              <th style={{ padding: '12px 20px' }}>Transaction Ref</th>
-              <th style={{ padding: '12px 20px' }}>Authorized By</th>
-              <th style={{ padding: '12px 20px' }}>Status</th>
-            </tr>
-          </thead>
-          <tbody>
-            {INITIAL_PAYOUTS.map((pay) => (
-              <tr key={pay.id} style={{ borderBottom: '1px solid #F0ECE4' }}>
-                <td style={{ padding: '14px 20px' }}>
-                  <strong style={{ color: '#162923', display: 'block' }}>{pay.recipient?.full_name}</strong>
-                  <span style={{ fontSize: '11px', color: '#888' }}>{pay.recipient?.email}</span>
-                </td>
-                <td style={{ padding: '14px 20px' }}>
-                  <strong style={{ color: '#162923', fontSize: '15px' }}>£{pay.amount.toFixed(2)}</strong>
-                </td>
-                <td style={{ padding: '14px 20px' }}>{pay.payout_method}</td>
-                <td style={{ padding: '14px 20px' }}>
-                  <code style={{ background: '#F8F6F3', padding: '2px 6px', borderRadius: '4px' }}>{pay.transaction_reference}</code>
-                </td>
-                <td style={{ padding: '14px 20px', color: '#666' }}>Chief Finance Officer</td>
-                <td style={{ padding: '14px 20px' }}>
-                  <span style={{ background: '#E8F5E9', color: '#1B5E20', padding: '4px 10px', borderRadius: '50px', fontSize: '11px', fontWeight: 700 }}>
-                    ✓ {pay.status.toUpperCase()}
-                  </span>
-                </td>
+        {payouts.length === 0 ? (
+          <div style={{ padding: '32px 24px', color: '#888', fontSize: '13px', textAlign: 'center' }}>
+            No payouts have been disbursed yet.
+          </div>
+        ) : (
+          <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left', fontSize: '13px' }}>
+            <thead>
+              <tr style={{ background: '#F8F6F3', borderBottom: '1px solid #E5E0D8' }}>
+                <th style={{ padding: '12px 20px' }}>Recipient / Account</th>
+                <th style={{ padding: '12px 20px' }}>Disbursed Amount</th>
+                <th style={{ padding: '12px 20px' }}>Channel</th>
+                <th style={{ padding: '12px 20px' }}>Transaction Ref</th>
+                <th style={{ padding: '12px 20px' }}>Authorized By</th>
+                <th style={{ padding: '12px 20px' }}>Status</th>
               </tr>
-            ))}
-          </tbody>
-        </table>
+            </thead>
+            <tbody>
+              {payouts.map((pay) => (
+                <tr key={pay.id} style={{ borderBottom: '1px solid #F0ECE4' }}>
+                  <td style={{ padding: '14px 20px' }}>
+                    <strong style={{ color: '#162923', display: 'block' }}>{pay.recipient?.full_name}</strong>
+                    <span style={{ fontSize: '11px', color: '#888' }}>{pay.recipient?.email}</span>
+                  </td>
+                  <td style={{ padding: '14px 20px' }}>
+                    <strong style={{ color: '#162923', fontSize: '15px' }}>£{pay.amount.toFixed(2)}</strong>
+                  </td>
+                  <td style={{ padding: '14px 20px' }}>{pay.payout_method}</td>
+                  <td style={{ padding: '14px 20px' }}>
+                    <code style={{ background: '#F8F6F3', padding: '2px 6px', borderRadius: '4px' }}>{pay.transaction_reference}</code>
+                  </td>
+                  <td style={{ padding: '14px 20px', color: '#666' }}>Chief Finance Officer</td>
+                  <td style={{ padding: '14px 20px' }}>
+                    <span style={{ background: '#E8F5E9', color: '#1B5E20', padding: '4px 10px', borderRadius: '50px', fontSize: '11px', fontWeight: 700 }}>
+                      ✓ {pay.status.toUpperCase()}
+                    </span>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        )}
       </div>
 
     </div>

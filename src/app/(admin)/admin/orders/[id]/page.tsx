@@ -1,19 +1,49 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import Link from 'next/link';
-import { INITIAL_ORDERS } from '@/lib/mockData';
-import { OrderStatus } from '@/lib/types';
-import { ArrowLeft, Scissors, User, MapPin, CreditCard, ShieldCheck } from 'lucide-react';
+import { getOrderById, updateOrderStatus } from '@/lib/db/orders';
+import { Order, OrderStatus } from '@/lib/types';
+import { ArrowLeft, Scissors, User, CreditCard } from 'lucide-react';
 
 export default function OrderDetailPage() {
   const params = useParams();
   const router = useRouter();
   const id = params?.id as string;
 
-  const order = INITIAL_ORDERS.find((o) => o.id === id) || INITIAL_ORDERS[0];
-  const [currentStatus, setCurrentStatus] = useState<OrderStatus>(order.status);
+  const [order, setOrder] = useState<Order | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [currentStatus, setCurrentStatus] = useState<OrderStatus>('pending');
+  const [saving, setSaving] = useState(false);
+  const [notFound, setNotFound] = useState(false);
+
+  useEffect(() => {
+    let cancelled = false;
+
+    async function load() {
+      if (!id) return;
+      try {
+        const data = await getOrderById(id);
+        if (cancelled) return;
+        if (!data) {
+          setNotFound(true);
+          return;
+        }
+        setOrder(data);
+        setCurrentStatus(data.status);
+      } catch (err) {
+        console.error('Failed to load order:', err);
+      } finally {
+        if (!cancelled) setLoading(false);
+      }
+    }
+
+    load();
+    return () => {
+      cancelled = true;
+    };
+  }, [id]);
 
   const STATUS_OPTIONS: OrderStatus[] = [
     'pending',
@@ -25,9 +55,47 @@ export default function OrderDetailPage() {
     'cancelled',
   ];
 
-  const handleUpdate = () => {
-    alert(`Status updated to: ${currentStatus.replace('_', ' ').toUpperCase()}`);
+  const handleUpdate = async () => {
+    if (!order) return;
+    setSaving(true);
+    try {
+      await updateOrderStatus(order.id, currentStatus);
+      // Update local order state to reflect new status
+      setOrder({ ...order, status: currentStatus });
+      alert(`Status updated to: ${currentStatus.replace('_', ' ').toUpperCase()}`);
+    } catch (err) {
+      console.error('Failed to update order status:', err);
+      alert('Failed to update status. Please try again.');
+    } finally {
+      setSaving(false);
+    }
   };
+
+  if (loading) {
+    return (
+      <div style={{ maxWidth: '1000px', margin: '0 auto' }}>
+        <Link href="/admin/orders" style={{ display: 'inline-flex', alignItems: 'center', gap: '6px', fontSize: '0.85rem', color: 'var(--green-700)', fontWeight: 600, marginBottom: '20px' }}>
+          <ArrowLeft size={16} /> Back to Orders Pipeline
+        </Link>
+        <div style={{ padding: '40px', textAlign: 'center', color: 'var(--slate-500)' }}>
+          Loading order specification sheet…
+        </div>
+      </div>
+    );
+  }
+
+  if (notFound || !order) {
+    return (
+      <div style={{ maxWidth: '1000px', margin: '0 auto' }}>
+        <Link href="/admin/orders" style={{ display: 'inline-flex', alignItems: 'center', gap: '6px', fontSize: '0.85rem', color: 'var(--green-700)', fontWeight: 600, marginBottom: '20px' }}>
+          <ArrowLeft size={16} /> Back to Orders Pipeline
+        </Link>
+        <div style={{ padding: '40px', textAlign: 'center', color: 'var(--slate-500)' }}>
+          Order not found.
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div style={{ maxWidth: '1000px', margin: '0 auto' }}>
@@ -47,15 +115,16 @@ export default function OrderDetailPage() {
         <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
           <select
             value={currentStatus}
+            disabled={saving}
             onChange={(e) => setCurrentStatus(e.target.value as OrderStatus)}
-            style={{ padding: '10px 14px', borderRadius: '8px', border: '1px solid var(--cream-300)', fontWeight: 700, background: 'var(--white)', fontSize: '0.85rem' }}
+            style={{ padding: '10px 14px', borderRadius: '8px', border: '1px solid var(--cream-300)', fontWeight: 700, background: 'var(--white)', fontSize: '0.85rem', cursor: saving ? 'wait' : 'pointer', opacity: saving ? 0.6 : 1 }}
           >
             {STATUS_OPTIONS.map((st) => (
               <option key={st} value={st}>{st.replace('_', ' ').toUpperCase()}</option>
             ))}
           </select>
-          <button onClick={handleUpdate} className="btn-3d-primary" style={{ padding: '10px 16px', fontSize: '0.85rem' }}>
-            Update State
+          <button onClick={handleUpdate} disabled={saving} className="btn-3d-primary" style={{ padding: '10px 16px', fontSize: '0.85rem', cursor: saving ? 'wait' : 'pointer', opacity: saving ? 0.6 : 1 }}>
+            {saving ? 'Updating…' : 'Update State'}
           </button>
         </div>
       </div>

@@ -1,49 +1,53 @@
 'use client';
 
-import React, { useState } from 'react';
-import { useRouter } from 'next/navigation';
-import { useAuth } from '@/context/AuthContext';
-import { Lock, ArrowRight, ShieldCheck, Mail, Key } from 'lucide-react';
+import React, { useState, Suspense } from 'react';
+import { useRouter, useSearchParams } from 'next/navigation';
 import Link from 'next/link';
+import { createClient } from '@/lib/supabase/client';
+import { Lock, ArrowRight, ShieldCheck, Mail, Key } from 'lucide-react';
 
-export default function LoginPage() {
+function LoginForm() {
   const router = useRouter();
-  const { switchRole, allUsers } = useAuth();
+  const searchParams = useSearchParams();
+  const nextPath = searchParams.get('next') || '/';
+  const justRegistered = searchParams.get('registered') === '1';
+  const justReset = searchParams.get('reset') === '1';
+
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [isRegister, setIsRegister] = useState(false);
   const [errorMsg, setErrorMsg] = useState('');
   const [loading, setLoading] = useState(false);
 
-  const handleLogin = (e: React.FormEvent) => {
+  const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     setErrorMsg('');
     setLoading(true);
-
-    if (!email || !password) {
-      setErrorMsg('Please enter both your email address and password.');
-      setLoading(false);
-      return;
-    }
-
-    // Authenticate user
-    const found = allUsers.find((u) => u.email.toLowerCase() === email.toLowerCase().trim());
-    if (found) {
-      switchRole(found.role);
-      if (found.role === 'customer') {
-        router.push('/track-order');
-      } else {
-        router.push('/admin');
-      }
-    } else {
-      if (isRegister) {
-        // Register new customer
-        switchRole('customer');
-        router.push('/track-order');
-      } else {
-        setErrorMsg('Invalid email or password. Please try again or create a new account.');
+    try {
+      const supabase = createClient();
+      const { data, error } = await supabase.auth.signInWithPassword({ email, password });
+      if (error) {
+        setErrorMsg(error.message);
         setLoading(false);
+        return;
       }
+      if (!data.user) {
+        setErrorMsg('Login failed. Please try again.');
+        setLoading(false);
+        return;
+      }
+      // Look up role to choose destination
+      const { data: profile } = await supabase
+        .from('profiles')
+        .select('role')
+        .eq('id', data.user.id)
+        .single();
+      const role = profile?.role || 'customer';
+      const dest = nextPath && nextPath !== '/' ? nextPath : role === 'customer' ? '/account' : '/admin';
+      router.push(dest);
+      router.refresh();
+    } catch (err: any) {
+      setErrorMsg(err?.message || 'An unexpected error occurred.');
+      setLoading(false);
     }
   };
 
@@ -75,16 +79,44 @@ export default function LoginPage() {
           >
             <span style={{ color: '#C9A84C', fontWeight: 800, fontSize: '1.4rem', fontFamily: 'var(--font-serif)' }}>D</span>
           </div>
-          <h1 style={{ fontSize: '1.85rem', color: 'var(--green-900)', margin: '0 0 6px' }}>
-            {isRegister ? 'Create Daroodi Account' : 'Daroodi Client Portal'}
-          </h1>
+          <h1 style={{ fontSize: '1.85rem', color: 'var(--green-900)', margin: '0 0 6px' }}>Sign in to Daroodi</h1>
           <p style={{ color: 'var(--slate-600)', fontSize: '0.9rem' }}>
-            {isRegister
-              ? 'Join our private clientele for bespoke tracking & priority commissions.'
-              : 'Sign in to access your orders, measurements, and bespoke commissions.'}
+            Access your orders, the atelier CMS, and your bespoke account.
           </p>
         </div>
 
+        {justRegistered && (
+          <div
+            style={{
+              padding: '12px 16px',
+              borderRadius: '8px',
+              background: '#E8F5E9',
+              border: '1px solid #C8E6C9',
+              color: '#1B5E20',
+              fontSize: '0.85rem',
+              marginBottom: '20px',
+              textAlign: 'center',
+            }}
+          >
+            Account created! Check your email to confirm, then sign in.
+          </div>
+        )}
+        {justReset && (
+          <div
+            style={{
+              padding: '12px 16px',
+              borderRadius: '8px',
+              background: '#E8F5E9',
+              border: '1px solid #C8E6C9',
+              color: '#1B5E20',
+              fontSize: '0.85rem',
+              marginBottom: '20px',
+              textAlign: 'center',
+            }}
+          >
+            Password updated. Please sign in with your new password.
+          </div>
+        )}
         {errorMsg && (
           <div
             style={{
@@ -114,6 +146,7 @@ export default function LoginPage() {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 required
+                autoComplete="email"
                 style={{
                   width: '100%',
                   padding: '12px 14px 12px 38px',
@@ -131,14 +164,10 @@ export default function LoginPage() {
 
           <div>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '6px' }}>
-              <label style={{ fontSize: '0.82rem', fontWeight: 700, color: 'var(--slate-800)' }}>
-                Password
-              </label>
-              {!isRegister && (
-                <Link href="/contact" style={{ fontSize: '0.78rem', color: 'var(--green-700)', textDecoration: 'underline' }}>
-                  Forgot password?
-                </Link>
-              )}
+              <label style={{ fontSize: '0.82rem', fontWeight: 700, color: 'var(--slate-800)' }}>Password</label>
+              <Link href="/auth/reset-password" style={{ fontSize: '0.78rem', color: 'var(--green-700)', textDecoration: 'underline' }}>
+                Forgot password?
+              </Link>
             </div>
             <div style={{ position: 'relative' }}>
               <input
@@ -147,6 +176,7 @@ export default function LoginPage() {
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 required
+                autoComplete="current-password"
                 style={{
                   width: '100%',
                   padding: '12px 14px 12px 38px',
@@ -166,49 +196,34 @@ export default function LoginPage() {
             type="submit"
             disabled={loading}
             className="btn-3d-primary"
-            style={{
-              width: '100%',
-              padding: '14px',
-              fontSize: '1rem',
-              justifyContent: 'center',
-              marginTop: '8px',
-              borderRadius: '12px',
-            }}
+            style={{ width: '100%', padding: '14px', fontSize: '1rem', justifyContent: 'center', marginTop: '8px', borderRadius: '12px' }}
           >
-            {loading ? 'Authenticating...' : isRegister ? 'Create Account' : 'Sign In'} <ArrowRight size={18} />
+            {loading ? 'Signing in…' : 'Sign In'} <ArrowRight size={18} />
           </button>
         </form>
 
         <div style={{ marginTop: '24px', textAlign: 'center', borderTop: '1px solid var(--cream-300)', paddingTop: '20px' }}>
           <p style={{ fontSize: '0.88rem', color: 'var(--slate-600)' }}>
-            {isRegister ? 'Already have an account?' : "Don't have an account yet?"}{' '}
-            <button
-              type="button"
-              onClick={() => {
-                setIsRegister(!isRegister);
-                setErrorMsg('');
-              }}
-              style={{
-                background: 'none',
-                border: 'none',
-                color: 'var(--green-700)',
-                fontWeight: 700,
-                cursor: 'pointer',
-                textDecoration: 'underline',
-                padding: 0,
-                fontSize: '0.88rem',
-              }}
-            >
-              {isRegister ? 'Sign In' : 'Register as Client'}
-            </button>
+            New to Daroodi?{' '}
+            <Link href="/auth/register" style={{ color: 'var(--green-700)', fontWeight: 700, textDecoration: 'underline' }}>
+              Create an account
+            </Link>
           </p>
         </div>
 
         <div style={{ marginTop: '20px', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px', color: 'var(--slate-500)', fontSize: '0.78rem' }}>
           <ShieldCheck size={14} color="var(--green-700)" />
-          <span>256-Bit Encrypted Secure Atelier Connection</span>
+          <span>256-bit Encrypted Secure Atelier Connection</span>
         </div>
       </div>
     </div>
+  );
+}
+
+export default function LoginPage() {
+  return (
+    <Suspense fallback={<div style={{ padding: '60px', textAlign: 'center' }}>Loading…</div>}>
+      <LoginForm />
+    </Suspense>
   );
 }

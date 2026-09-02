@@ -1,5 +1,4 @@
 import type { Metadata } from 'next';
-import { AuthProvider } from '@/context/AuthContext';
 import { CartProvider } from '@/context/CartContext';
 import { LayoutWrapper } from '@/components/storefront/LayoutWrapper';
 import { TrackingScripts } from '@/components/storefront/TrackingScripts';
@@ -148,12 +147,10 @@ export default function RootLayout({
         />
       </head>
       <body>
-        <AuthProvider>
-          <CartProvider>
-            <TrackingScripts />
-            <LayoutWrapper>{children}</LayoutWrapper>
-          </CartProvider>
-        </AuthProvider>
+        <CartProvider>
+          <TrackingScripts />
+          <LayoutWrapper>{children}</LayoutWrapper>
+        </CartProvider>
       </body>
     </html>
   );
