@@ -1,14 +1,35 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { useCart } from '@/context/CartContext';
 import { Trash2, ShieldCheck, ArrowRight, CheckCircle } from 'lucide-react';
+import { trackEvent } from '@/lib/analytics';
 
 export default function CartPage() {
   const { cart, removeFromCart, updateQuantity, clearCart, subtotal } = useCart();
   const [isCheckingOut, setIsCheckingOut] = useState(false);
   const [orderCompleteNumber, setOrderCompleteNumber] = useState<string | null>(null);
+
+  // Fire begin_checkout when the user opens the checkout form
+  useEffect(() => {
+    if (isCheckingOut && !orderCompleteNumber) {
+      trackEvent('begin_checkout', {
+        value: subtotal,
+        currency: 'GBP',
+        metadata: { num_items: cart.length },
+      });
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isCheckingOut]);
+
+  // Fire view_cart on landing
+  useEffect(() => {
+    if (cart.length > 0) {
+      trackEvent('view_cart', { value: subtotal, currency: 'GBP', metadata: { num_items: cart.length } });
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const [formData, setFormData] = useState({
     fullName: 'Lord Arthur Pendelton',
@@ -24,6 +45,15 @@ export default function CartPage() {
   const handlePlaceOrder = (e: React.FormEvent) => {
     e.preventDefault();
     const orderNum = `DAR-2026-${Math.floor(1000 + Math.random() * 9000)}`;
+    trackEvent('purchase', {
+      value: subtotal,
+      currency: 'GBP',
+      metadata: {
+        order_id: orderNum,
+        num_items: cart.length,
+        items: cart.map((i) => ({ id: i.product.id, name: i.product.title, qty: i.quantity, size: i.selectedSize })),
+      },
+    });
     setOrderCompleteNumber(orderNum);
     clearCart();
     setIsCheckingOut(false);

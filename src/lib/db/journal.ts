@@ -61,3 +61,21 @@ export async function saveJournalPost(post: JournalPost): Promise<JournalPost> {
 
   return post;
 }
+
+export async function deleteJournalPost(postId: string): Promise<boolean> {
+  try {
+    await supabase.from('journal_posts').delete().eq('id', postId);
+  } catch {
+    // Fallback
+  }
+
+  if (typeof window !== 'undefined') {
+    const existing = await getJournalPosts();
+    localStorage.setItem(
+      JOURNAL_STORAGE_KEY,
+      JSON.stringify(existing.filter((p) => p.id !== postId))
+    );
+  }
+
+  return true;
+}

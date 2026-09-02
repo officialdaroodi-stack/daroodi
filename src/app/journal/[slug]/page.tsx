@@ -19,8 +19,9 @@ export default function SingleJournalPost({ params }: { params: Promise<{ slug: 
       setLoading(true);
       const p = await getJournalPostBySlug(slug);
       const all = await getJournalPosts();
-      setPost(p);
-      setRelatedPosts(all.filter((item) => item.slug !== slug).slice(0, 2));
+      // Drafts are not publicly visible
+      setPost(p && (p.status || 'published') === 'published' ? p : null);
+      setRelatedPosts(all.filter((item) => item.slug !== slug && (item.status || 'published') === 'published').slice(0, 2));
       setLoading(false);
     }
     load();
@@ -134,10 +135,10 @@ export default function SingleJournalPost({ params }: { params: Promise<{ slug: 
         }}
       >
         <div style={{ display: 'flex', alignItems: 'center', gap: '14px', color: 'var(--slate-600)', fontSize: '0.88rem' }}>
-          <span>By <strong>{post.author_name || 'Daroodi Master Stylist'}</strong></span>
+          <span>By <strong>{post.author_name || post.author || 'Daroodi Master Stylist'}</strong></span>
           <span>·</span>
           <span style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
-            <Clock size={14} /> {post.read_time_mins} min read
+            <Clock size={14} /> {post.read_time_mins || post.read_time_minutes || 5} min read
           </span>
         </div>
 
@@ -165,7 +166,7 @@ export default function SingleJournalPost({ params }: { params: Promise<{ slug: 
       {/* Featured Header Visual */}
       <div style={{ borderRadius: 'var(--radius-xl)', overflow: 'hidden', marginBottom: '44px', boxShadow: 'var(--shadow-3d-card)', aspectRatio: '16/9' }}>
         <img
-          src={post.featured_image_url}
+          src={post.featured_image_url || post.cover_image_url || '/uploads/2026/05/craftsmanship.jpg'}
           alt={post.title}
           style={{ width: '100%', height: '100%', objectFit: 'cover' }}
         />
@@ -180,7 +181,7 @@ export default function SingleJournalPost({ params }: { params: Promise<{ slug: 
           whiteSpace: 'pre-line',
         }}
       >
-        {post.content_markdown}
+        {post.content_markdown || post.content}
       </div>
 
       {/* Custom Tailoring Callout Banner */}

@@ -1,13 +1,10 @@
 'use client';
 
 import React from 'react';
-import { Header } from '@/components/storefront/Header';
-import { Footer } from '@/components/storefront/Footer';
 
 export default function PrivacyPolicyPage() {
   return (
     <div style={{ background: '#FFFFFF', minHeight: '100vh', color: '#162923' }}>
-      <Header />
 
       <section style={{ background: 'linear-gradient(135deg, #162923 0%, #1F3B33 100%)', color: '#FFFFFF', padding: '60px 20px', textAlign: 'center' }}>
         <div style={{ maxWidth: '800px', margin: '0 auto' }}>
@@ -47,7 +44,6 @@ export default function PrivacyPolicyPage() {
         </p>
       </main>
 
-      <Footer />
     </div>
   );
 }

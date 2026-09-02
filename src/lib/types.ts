@@ -283,10 +283,57 @@ export interface JournalPost {
   author_name?: string;
   author?: string;
   category?: string;
+  tags?: string[];
   read_time_mins?: number;
   read_time_minutes?: number;
   published_at: string;
   status?: 'draft' | 'published';
+  seo_title?: string;
+  seo_description?: string;
+}
+
+/** A standalone CMS-managed page rendered on the storefront at /pages/[slug] */
+export interface CMSPage {
+  id: string;
+  slug: string;
+  title: string;
+  content: string;
+  excerpt?: string;
+  featured_image_url?: string;
+  status: 'draft' | 'published';
+  show_in_footer?: boolean;
+  seo_title?: string;
+  seo_description?: string;
+  created_at: string;
+  updated_at?: string;
+}
+
+/** Marketing / analytics integration keys managed from /admin/settings */
+export interface TrackingSettings {
+  ga4_measurement_id?: string;   // e.g. G-XXXXXXX
+  gtm_container_id?: string;     // e.g. GTM-XXXXXXX
+  meta_pixel_id?: string;        // Facebook pixel numeric id
+  tiktok_pixel_id?: string;      // TikTok pixel id
+  custom_head_scripts?: string;  // raw HTML/JS injected into <head>
+  custom_body_scripts?: string;  // raw HTML/JS injected at end of <body>
+  updated_at?: string;
+}
+
+/** A single first-party analytics event recorded on the storefront */
+export interface AnalyticsEvent {
+  id: string;
+  event: string;                 // page_view | view_item | add_to_cart | begin_checkout | purchase | ...
+  path: string;
+  referrer?: string;
+  session_id: string;
+  visitor_id: string;
+  device: 'mobile' | 'tablet' | 'desktop';
+  browser?: string;
+  country?: string;
+  value?: number;                // monetary value for commerce events
+  currency?: string;
+  metadata?: Record<string, any>;
+  created_at: string;            // ISO timestamp
 }
 
 export interface AuditLog {

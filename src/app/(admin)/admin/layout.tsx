@@ -21,10 +21,13 @@ import {
   DollarSign,
   TrendingUp,
   Globe,
-  Layers,
   Terminal,
   LogOut,
   Sparkles,
+  BarChart3,
+  FileText,
+  BookOpen,
+  Plug,
 } from 'lucide-react';
 
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
@@ -148,28 +151,66 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
                 className={`sidebar-link ${pathname === '/admin/my-sales' ? 'active' : ''}`}
               >
                 <TrendingUp size={18} />
-                <span>My Commissions & Links</span>
+                <span>My Commissions &amp; Links</span>
               </Link>
             </>
           )}
 
-          {/* Headless CMS & Developer Consoles */}
-          {(isDeveloper(role) || role === 'admin') && (
+          {/* WordPress-style content management (posts, pages, reviews, Q&A) */}
+          {(role === 'super_admin' || role === 'admin' || role === 'marketing_admin' || role === 'dev_frontend' || role === 'product_editor') && (
             <>
-              <div className="sidebar-section-title">Engineering & CMS</div>
+              <div className="sidebar-section-title">Content &amp; CMS</div>
+              <Link
+                href="/admin/posts"
+                className={`sidebar-link ${pathname.startsWith('/admin/posts') ? 'active' : ''}`}
+              >
+                <BookOpen size={18} />
+                <span>Blog Posts</span>
+              </Link>
+              <Link
+                href="/admin/pages"
+                className={`sidebar-link ${pathname.startsWith('/admin/pages') ? 'active' : ''}`}
+              >
+                <FileText size={18} />
+                <span>Storefront Pages</span>
+              </Link>
               <Link
                 href="/admin/cms"
                 className={`sidebar-link ${pathname === '/admin/cms' ? 'active' : ''}`}
               >
-                <Layers size={18} />
-                <span>Headless CMS Blocks</span>
+                <Sparkles size={18} />
+                <span>Reviews &amp; Q&amp;A</span>
+              </Link>
+            </>
+          )}
+
+          {/* Analytics — available to all admin roles */}
+          <div className="sidebar-section-title">Insights</div>
+          <Link
+            href="/admin/analytics"
+            className={`sidebar-link ${pathname === '/admin/analytics' ? 'active' : ''}`}
+          >
+            <BarChart3 size={18} />
+            <span>Visitor Analytics</span>
+          </Link>
+
+          {/* Engineering & integration settings */}
+          {(role === 'super_admin' || role === 'admin' || isDeveloper(role)) && (
+            <>
+              <div className="sidebar-section-title">Engineering</div>
+              <Link
+                href="/admin/settings"
+                className={`sidebar-link ${pathname === '/admin/settings' ? 'active' : ''}`}
+              >
+                <Plug size={18} />
+                <span>Tracking &amp; Integrations</span>
               </Link>
               <Link
                 href="/admin/system"
                 className={`sidebar-link ${pathname === '/admin/system' ? 'active' : ''}`}
               >
                 <Terminal size={18} />
-                <span>Supabase DB & Logs</span>
+                <span>Supabase DB &amp; Logs</span>
               </Link>
             </>
           )}

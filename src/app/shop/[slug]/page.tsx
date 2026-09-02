@@ -1,11 +1,12 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useParams } from 'next/navigation';
 import Link from 'next/link';
 import { INITIAL_PRODUCTS } from '@/lib/mockData';
 import { useCart } from '@/context/CartContext';
 import { CustomMeasurements } from '@/lib/types';
+import { trackEvent } from '@/lib/analytics';
 import {
   Sparkles,
   Scissors,
@@ -37,6 +38,23 @@ export default function SingleProductPage() {
       setActiveImage(product.featured_image_url);
     }
   }, [product]);
+
+  // Track a view_item event for analytics + pixels
+  useEffect(() => {
+    if (product) {
+      trackEvent('view_item', {
+        value: product.sale_price_gbp || product.base_price_gbp,
+        currency: 'GBP',
+        metadata: {
+          item_id: product.id,
+          item_name: product.title,
+          item_category: product.tier,
+          price: product.sale_price_gbp || product.base_price_gbp,
+        },
+      });
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [product.id]);
   const [selectedSize, setSelectedSize] = useState<string>('M');
   const [selectedColor, setSelectedColor] = useState<string>(
     product.acf_meta?.product_colors?.[0]?.name || 'Imperial Emerald'

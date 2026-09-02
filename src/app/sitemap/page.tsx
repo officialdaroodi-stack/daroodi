@@ -2,8 +2,6 @@
 
 import React, { useState } from 'react';
 import Link from 'next/link';
-import { Header } from '@/components/storefront/Header';
-import { Footer } from '@/components/storefront/Footer';
 import { INITIAL_PRODUCTS, INITIAL_COLLECTIONS, INITIAL_JOURNAL_POSTS } from '@/lib/mockData';
 import { Search, Compass, Sparkles, BookOpen, Layers, ShieldCheck, ChevronRight } from 'lucide-react';
 
@@ -30,7 +28,6 @@ export default function StylishHTMLSitemap() {
 
   return (
     <div style={{ background: '#FFFFFF', minHeight: '100vh', color: '#162923' }}>
-      <Header />
 
       {/* Hero Banner */}
       <section style={{ background: 'linear-gradient(135deg, #162923 0%, #1F3B33 100%)', color: '#FFFFFF', padding: '60px 20px 50px', textAlign: 'center', position: 'relative' }}>
@@ -243,7 +240,6 @@ export default function StylishHTMLSitemap() {
         </div>
       </main>
 
-      <Footer />
     </div>
   );
 }

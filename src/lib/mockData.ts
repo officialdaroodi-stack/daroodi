@@ -48,7 +48,7 @@ import allProductsData from './all_products_catalog.json';
 export const INITIAL_PRODUCTS: Product[] = allProductsData.map((p) => ({
   ...p,
   collection: INITIAL_COLLECTIONS.find((c) => c.id === p.collection_id) || INITIAL_COLLECTIONS[0],
-})) as Product[];
+})) as unknown as Product[];
 
 
 export const INITIAL_JOURNAL_POSTS: JournalPost[] = [

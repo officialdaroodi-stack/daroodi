@@ -2,14 +2,11 @@
 
 import React from 'react';
 import Link from 'next/link';
-import { Header } from '@/components/storefront/Header';
-import { Footer } from '@/components/storefront/Footer';
 import { Truck, ShieldCheck, Globe, Clock, PackageCheck, AlertCircle } from 'lucide-react';
 
 export default function ShippingPage() {
   return (
     <div style={{ background: '#FFFFFF', minHeight: '100vh', color: '#162923' }}>
-      <Header />
 
       {/* Hero Header */}
       <section style={{ background: 'linear-gradient(135deg, #162923 0%, #1F3B33 100%)', color: '#FFFFFF', padding: '60px 20px', textAlign: 'center' }}>
@@ -113,7 +110,6 @@ export default function ShippingPage() {
 
       </main>
 
-      <Footer />
     </div>
   );
 }

@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import { AuthProvider } from '@/context/AuthContext';
 import { CartProvider } from '@/context/CartContext';
 import { LayoutWrapper } from '@/components/storefront/LayoutWrapper';
+import { TrackingScripts } from '@/components/storefront/TrackingScripts';
 import '@/styles/globals.css';
 import '@/styles/homepage.css';
 import '@/styles/collections-theme.css';
@@ -149,6 +150,7 @@ export default function RootLayout({
       <body>
         <AuthProvider>
           <CartProvider>
+            <TrackingScripts />
             <LayoutWrapper>{children}</LayoutWrapper>
           </CartProvider>
         </AuthProvider>

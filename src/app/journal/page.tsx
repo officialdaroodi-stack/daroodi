@@ -15,7 +15,8 @@ export default function JournalArchivePage() {
     async function load() {
       setLoading(true);
       const data = await getJournalPosts();
-      setPosts(data);
+      // Only published posts are visible on the public storefront
+      setPosts(data.filter((p) => (p.status || 'published') === 'published'));
       setLoading(false);
     }
     load();
@@ -80,7 +81,7 @@ export default function JournalArchivePage() {
             >
               <div style={{ width: '100%', height: '240px', overflow: 'hidden', position: 'relative' }}>
                 <img
-                  src={post.featured_image_url}
+                  src={post.featured_image_url || post.cover_image_url || '/uploads/2026/05/craftsmanship.jpg'}
                   alt={post.title}
                   style={{ width: '100%', height: '100%', objectFit: 'cover' }}
                 />
@@ -104,10 +105,10 @@ export default function JournalArchivePage() {
 
               <div style={{ padding: '28px', display: 'flex', flexDirection: 'column', flexGrow: 1 }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '12px', fontSize: '0.78rem', color: 'var(--slate-500)', marginBottom: '12px' }}>
-                  <span>{post.author_name || 'Daroodi Master Stylist'}</span>
+                  <span>{post.author_name || post.author || 'Daroodi Master Stylist'}</span>
                   <span>·</span>
                   <span style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
-                    <Clock size={13} /> {post.read_time_mins} min read
+                    <Clock size={13} /> {post.read_time_mins || post.read_time_minutes || 5} min read
                   </span>
                 </div>
 

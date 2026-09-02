@@ -2,6 +2,7 @@
 
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { CartItem, Product, CustomMeasurements } from '@/lib/types';
+import { trackEvent } from '@/lib/analytics';
 
 interface CartContextType {
   cart: CartItem[];
@@ -43,6 +44,7 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
     isCustom?: boolean,
     measurements?: CustomMeasurements
   ) => {
+    const unitPrice = product.sale_price_gbp || product.base_price_gbp;
     setCart((prev) => {
       const existingIndex = prev.findIndex(
         (item) =>
@@ -69,6 +71,22 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
           measurements,
         },
       ];
+    });
+
+    // Track the commerce event for analytics + pixels
+    trackEvent('add_to_cart', {
+      value: unitPrice * quantity,
+      currency: 'GBP',
+      metadata: {
+        item_id: product.id,
+        item_name: product.title,
+        item_category: product.tier || product.acf_meta?.embroidery_technique,
+        price: unitPrice,
+        quantity,
+        size,
+        color,
+        is_custom: !!isCustom,
+      },
     });
   };
 
