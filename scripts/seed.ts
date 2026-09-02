@@ -196,8 +196,8 @@ async function main() {
   console.log(`  ✓ ${JOURNAL_POSTS.length} journal posts`);
 
   console.log('4/4 — super_admin auth user...');
-  const adminEmail = 'admin@daroodi.com';
-  const password = generateStrongPassword();
+  const adminEmail = process.env.ADMIN_EMAIL || 'admin@daroodi.com';
+  const password = process.env.ADMIN_INITIAL_PASSWORD || generateStrongPassword();
 
   // Check if user already exists
   const { data: existing } = await supabase.auth.admin.listUsers();

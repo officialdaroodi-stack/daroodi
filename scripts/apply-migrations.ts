@@ -198,8 +198,8 @@ async function main() {
 
   // Step 5: admin user
   console.log('5/5 — Creating super_admin auth user…');
-  const adminEmail = 'admin@daroodi.com';
-  const password = generateStrongPassword();
+  const adminEmail = process.env.ADMIN_EMAIL || 'admin@daroodi.com';
+  const password = process.env.ADMIN_INITIAL_PASSWORD || generateStrongPassword();
 
   const { data: existing } = await supabase.auth.admin.listUsers();
   const found = existing?.users?.find((u) => u.email === adminEmail);
