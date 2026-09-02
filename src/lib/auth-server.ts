@@ -22,19 +22,34 @@ export async function getCurrentUser(): Promise<AuthUser | null> {
   } = await supabase.auth.getUser();
   if (!user) return null;
 
-  const { data: profile } = await supabase
+  let { data: profile } = await supabase
     .from('profiles')
     .select('id, email, full_name, role')
     .eq('id', user.id)
-    .single();
+    .maybeSingle();
+
+  if (!profile && user.email) {
+    const { data: profileByEmail } = await supabase
+      .from('profiles')
+      .select('id, email, full_name, role')
+      .eq('email', user.email)
+      .maybeSingle();
+    profile = profileByEmail;
+  }
+
+  const isAdminEmail = user.email?.toLowerCase() === 'admin@daroodi.com';
 
   if (!profile) {
     return {
       id: user.id,
       email: user.email ?? '',
-      full_name: user.user_metadata?.full_name ?? '',
-      role: 'customer',
+      full_name: user.user_metadata?.full_name ?? (isAdminEmail ? 'Sarmad Daroodi (Chief Maison Master)' : ''),
+      role: isAdminEmail ? 'super_admin' : 'customer',
     };
+  }
+
+  if (isAdminEmail && profile.role !== 'super_admin') {
+    profile.role = 'super_admin';
   }
 
   return profile as AuthUser;

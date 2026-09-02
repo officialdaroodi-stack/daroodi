@@ -36,15 +36,30 @@ function LoginForm() {
         return;
       }
       // Look up role to choose destination
-      const { data: profile } = await supabase
-        .from('profiles')
-        .select('role')
-        .eq('id', data.user.id)
-        .single();
-      const role = profile?.role || 'customer';
-      const dest = nextPath && nextPath !== '/' ? nextPath : role === 'customer' ? '/account' : '/admin';
-      router.push(dest);
-      router.refresh();
+      const isAdminUser = email.toLowerCase().trim() === 'admin@daroodi.com';
+      let role = isAdminUser ? 'super_admin' : 'customer';
+
+      try {
+        const { data: profile } = await supabase
+          .from('profiles')
+          .select('role')
+          .eq('id', data.user.id)
+          .maybeSingle();
+        if (profile?.role) {
+          role = profile.role;
+        }
+      } catch {
+        // fallback
+      }
+
+      const isStaff = isAdminUser || (role && role !== 'customer');
+      const dest = nextPath && nextPath !== '/' && nextPath !== '/account'
+        ? nextPath
+        : isStaff
+        ? '/admin'
+        : '/account';
+
+      window.location.href = dest;
     } catch (err: any) {
       setErrorMsg(err?.message || 'An unexpected error occurred.');
       setLoading(false);

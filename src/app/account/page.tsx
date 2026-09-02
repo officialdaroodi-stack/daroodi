@@ -34,6 +34,55 @@ export default async function AccountPage() {
 
   return (
     <div style={{ maxWidth: '1100px', margin: '40px auto 100px', padding: '0 16px' }}>
+      {/* Staff / Super Admin Access Banner */}
+      {user.role !== 'customer' && (
+        <div
+          style={{
+            background: 'linear-gradient(135deg, #0F241E 0%, #1A3C34 100%)',
+            border: '1.5px solid #C9A84C',
+            borderRadius: '16px',
+            padding: '20px 24px',
+            marginBottom: '28px',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            flexWrap: 'wrap',
+            gap: '16px',
+            boxShadow: '0 8px 24px rgba(15, 36, 30, 0.25)',
+          }}
+        >
+          <div>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '4px' }}>
+              <span style={{ fontSize: '1.2rem' }}>👑</span>
+              <strong style={{ color: '#F4E8C1', fontSize: '1.1rem', letterSpacing: '0.02em' }}>
+                Atelier Staff Access Active ({user.role.replace(/_/g, ' ').toUpperCase()})
+              </strong>
+            </div>
+            <p style={{ margin: 0, color: 'rgba(255, 255, 255, 0.8)', fontSize: '0.9rem' }}>
+              You have privileged access to manage Products, Orders, CMS, Finance, and Customer Accounts.
+            </p>
+          </div>
+          <Link
+            href="/admin"
+            style={{
+              background: 'linear-gradient(145deg, #C9A84C, #A88938)',
+              color: '#0F241E',
+              fontWeight: 800,
+              fontSize: '0.95rem',
+              padding: '12px 24px',
+              borderRadius: '8px',
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: '8px',
+              textDecoration: 'none',
+              boxShadow: '0 4px 14px rgba(201, 168, 76, 0.4)',
+            }}
+          >
+            Open Admin Dashboard <ChevronRight size={16} />
+          </Link>
+        </div>
+      )}
+
       {/* Header */}
       <div style={{ marginBottom: '24px' }}>
         <span style={{ color: 'var(--green-700)', fontSize: '0.8rem', fontWeight: 800, letterSpacing: '0.14em', textTransform: 'uppercase' }}>
