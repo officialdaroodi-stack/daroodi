@@ -54,10 +54,16 @@ export default function AdminSettingsPage() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    getTrackingSettings().then((s) => {
-      setSettings(s);
-      setLoading(false);
-    });
+    getTrackingSettings()
+      .then((s) => {
+        setSettings(s);
+      })
+      .catch((err) => {
+        console.error('Failed to load tracking settings:', err);
+      })
+      .finally(() => {
+        setLoading(false);
+      });
   }, []);
 
   const handleSave = async (e: React.FormEvent) => {

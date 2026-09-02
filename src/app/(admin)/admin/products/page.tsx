@@ -17,6 +17,8 @@ import {
   HelpCircle,
   Scissors,
   Palette,
+  Upload,
+  Loader2,
 } from 'lucide-react';
 
 export default function AdminProductsPage() {
@@ -41,6 +43,7 @@ export default function AdminProductsPage() {
     '/uploads/2026/06/Mens-Premium-Prince-Coat-3.webp',
   ]);
   const [newGalleryUrl, setNewGalleryUrl] = useState('');
+  const [uploading, setUploading] = useState(false);
   const [stockStatus, setStockStatus] = useState<'in_stock' | 'made_to_order' | 'out_of_stock'>('in_stock');
   const [stockQty, setStockQty] = useState(5);
   const [leadTime, setLeadTime] = useState(4);
@@ -167,6 +170,52 @@ export default function AdminProductsPage() {
 
   const handleRemoveGalleryImage = (idx: number) => {
     setGalleryImages(galleryImages.filter((_, i) => i !== idx));
+  };
+
+  const handleUploadFeatured = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    setUploading(true);
+    try {
+      const fd = new FormData();
+      fd.append('file', file);
+      const res = await fetch('/api/admin/upload', { method: 'POST', body: fd });
+      const data = await res.json();
+      if (data.url) {
+        setFeaturedImage(data.url);
+      } else {
+        alert(data.error || 'Upload failed');
+      }
+    } catch (err: any) {
+      alert('Upload error: ' + err.message);
+    } finally {
+      setUploading(false);
+    }
+  };
+
+  const handleUploadGallery = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = e.target.files;
+    if (!files || files.length === 0) return;
+    setUploading(true);
+    try {
+      const newUrls: string[] = [];
+      for (let i = 0; i < files.length; i++) {
+        const fd = new FormData();
+        fd.append('file', files[i]);
+        const res = await fetch('/api/admin/upload', { method: 'POST', body: fd });
+        const data = await res.json();
+        if (data.url) {
+          newUrls.push(data.url);
+        }
+      }
+      if (newUrls.length > 0) {
+        setGalleryImages((prev) => [...prev, ...newUrls]);
+      }
+    } catch (err: any) {
+      alert('Gallery upload error: ' + err.message);
+    } finally {
+      setUploading(false);
+    }
   };
 
   const handleSave = async (e: React.FormEvent) => {
@@ -513,25 +562,166 @@ export default function AdminProductsPage() {
 
               {/* TAB 4: Media & Gallery */}
               {activeTab === 'media' && (
-                <div style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
-                  <div>
-                    <label style={{ fontSize: '12px', fontWeight: 700, display: 'block', marginBottom: '4px' }}>Featured Image URL / Path</label>
-                    <input type="text" required value={featuredImage} onChange={(e) => setFeaturedImage(e.target.value)} style={{ width: '100%', padding: '10px', borderRadius: '8px', border: '1px solid #E5E0D8' }} />
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
+                  {/* Featured Image */}
+                  <div style={{ background: '#FAF8F5', border: '1px solid #E5E0D8', borderRadius: '12px', padding: '16px' }}>
+                    <label style={{ fontSize: '13px', fontWeight: 800, color: '#162923', display: 'block', marginBottom: '8px' }}>
+                      Primary Featured Image
+                    </label>
+                    <div style={{ display: 'flex', gap: '16px', alignItems: 'center', flexWrap: 'wrap' }}>
+                      {featuredImage && (
+                        <div style={{ position: 'relative', width: '90px', height: '115px', borderRadius: '8px', overflow: 'hidden', border: '2px solid #C9A84C', flexShrink: 0, boxShadow: '0 2px 8px rgba(0,0,0,0.1)' }}>
+                          <img src={featuredImage} alt="Featured Preview" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                        </div>
+                      )}
+                      <div style={{ flex: 1, minWidth: '240px', display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                        <div style={{ display: 'flex', gap: '8px' }}>
+                          <input
+                            type="text"
+                            required
+                            placeholder="/uploads/2026/06/... or https://..."
+                            value={featuredImage}
+                            onChange={(e) => setFeaturedImage(e.target.value)}
+                            style={{ flex: 1, padding: '9px 12px', borderRadius: '8px', border: '1px solid #E5E0D8', fontSize: '12px' }}
+                          />
+                          <label
+                            style={{
+                              padding: '9px 16px',
+                              background: '#162923',
+                              color: '#C9A84C',
+                              borderRadius: '8px',
+                              fontSize: '12px',
+                              fontWeight: 700,
+                              cursor: uploading ? 'wait' : 'pointer',
+                              display: 'inline-flex',
+                              alignItems: 'center',
+                              gap: '6px',
+                              whiteSpace: 'nowrap',
+                            }}
+                          >
+                            {uploading ? <Loader2 size={14} className="animate-spin" /> : <Upload size={14} />}
+                            Upload New
+                            <input
+                              type="file"
+                              accept="image/*"
+                              onChange={handleUploadFeatured}
+                              disabled={uploading}
+                              style={{ display: 'none' }}
+                            />
+                          </label>
+                        </div>
+                        <span style={{ fontSize: '11px', color: '#666' }}>
+                          Upload image directly from device or paste an asset path/URL.
+                        </span>
+                      </div>
+                    </div>
                   </div>
 
-                  <div>
-                    <label style={{ fontSize: '12px', fontWeight: 700, display: 'block', marginBottom: '4px' }}>Gallery Images</label>
-                    <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap', marginBottom: '12px' }}>
-                      {galleryImages.map((img, idx) => (
-                        <div key={idx} style={{ position: 'relative', width: '80px', height: '100px', borderRadius: '8px', overflow: 'hidden', border: '1px solid #E5E0D8' }}>
-                          <img src={img} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
-                          <button type="button" onClick={() => handleRemoveGalleryImage(idx)} style={{ position: 'absolute', top: '4px', right: '4px', background: 'rgba(0,0,0,0.7)', color: '#fff', borderRadius: '50%', width: '18px', height: '18px', display: 'flex', alignItems: 'center', justifyContent: 'center', border: 'none', fontSize: '11px', cursor: 'pointer' }}>×</button>
-                        </div>
-                      ))}
+                  {/* Gallery Images */}
+                  <div style={{ background: '#FAF8F5', border: '1px solid #E5E0D8', borderRadius: '12px', padding: '16px' }}>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '12px' }}>
+                      <div>
+                        <label style={{ fontSize: '13px', fontWeight: 800, color: '#162923', display: 'block' }}>
+                          Product Photo Gallery ({galleryImages.length})
+                        </label>
+                        <span style={{ fontSize: '11px', color: '#666' }}>
+                          High-resolution angles, embroidery close-ups &amp; lining details.
+                        </span>
+                      </div>
+                      <label
+                        style={{
+                          padding: '9px 16px',
+                          background: '#C9A84C',
+                          color: '#0F241E',
+                          borderRadius: '8px',
+                          fontSize: '12px',
+                          fontWeight: 800,
+                          cursor: uploading ? 'wait' : 'pointer',
+                          display: 'inline-flex',
+                          alignItems: 'center',
+                          gap: '6px',
+                          boxShadow: '0 2px 6px rgba(201, 168, 76, 0.3)',
+                        }}
+                      >
+                        {uploading ? <Loader2 size={14} className="animate-spin" /> : <Upload size={14} />}
+                        Upload Photos
+                        <input
+                          type="file"
+                          accept="image/*"
+                          multiple
+                          onChange={handleUploadGallery}
+                          disabled={uploading}
+                          style={{ display: 'none' }}
+                        />
+                      </label>
                     </div>
+
+                    {/* Thumbnails grid */}
+                    <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap', marginBottom: '14px', minHeight: '80px', padding: '10px', background: '#fff', borderRadius: '8px', border: '1px dashed #DDD7CD' }}>
+                      {galleryImages.length === 0 ? (
+                        <div style={{ width: '100%', textAlign: 'center', padding: '16px', color: '#999', fontSize: '12px' }}>
+                          No gallery images uploaded yet. Click "Upload Photos" above or paste URLs below.
+                        </div>
+                      ) : (
+                        galleryImages.map((img, idx) => (
+                          <div
+                            key={idx}
+                            style={{
+                              position: 'relative',
+                              width: '85px',
+                              height: '110px',
+                              borderRadius: '8px',
+                              overflow: 'hidden',
+                              border: '1px solid #E5E0D8',
+                              boxShadow: '0 2px 4px rgba(0,0,0,0.05)',
+                            }}
+                          >
+                            <img src={img} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                            <button
+                              type="button"
+                              onClick={() => handleRemoveGalleryImage(idx)}
+                              title="Delete photo"
+                              style={{
+                                position: 'absolute',
+                                top: '4px',
+                                right: '4px',
+                                background: 'rgba(200, 30, 30, 0.85)',
+                                color: '#fff',
+                                borderRadius: '50%',
+                                width: '20px',
+                                height: '20px',
+                                display: 'flex',
+                                alignItems: 'center',
+                                justifyContent: 'center',
+                                border: 'none',
+                                fontSize: '13px',
+                                fontWeight: 800,
+                                cursor: 'pointer',
+                              }}
+                            >
+                              ×
+                            </button>
+                          </div>
+                        ))
+                      )}
+                    </div>
+
+                    {/* Manual URL input fallback */}
                     <div style={{ display: 'flex', gap: '8px' }}>
-                      <input type="text" placeholder="/uploads/2026/06/..." value={newGalleryUrl} onChange={(e) => setNewGalleryUrl(e.target.value)} style={{ flex: 1, padding: '8px 12px', borderRadius: '8px', border: '1px solid #E5E0D8', fontSize: '12px' }} />
-                      <button type="button" onClick={handleAddGalleryImage} style={{ padding: '8px 16px', background: '#162923', color: '#fff', borderRadius: '8px', fontSize: '12px', fontWeight: 700, border: 'none', cursor: 'pointer' }}>Add Photo</button>
+                      <input
+                        type="text"
+                        placeholder="Or paste image URL (/uploads/2026/06/...)"
+                        value={newGalleryUrl}
+                        onChange={(e) => setNewGalleryUrl(e.target.value)}
+                        style={{ flex: 1, padding: '8px 12px', borderRadius: '8px', border: '1px solid #E5E0D8', fontSize: '12px' }}
+                      />
+                      <button
+                        type="button"
+                        onClick={handleAddGalleryImage}
+                        style={{ padding: '8px 16px', background: '#162923', color: '#fff', borderRadius: '8px', fontSize: '12px', fontWeight: 700, border: 'none', cursor: 'pointer' }}
+                      >
+                        Add URL
+                      </button>
                     </div>
                   </div>
                 </div>
