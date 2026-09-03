@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700;800;900&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    width: 1920px;
+    height: 1080px;
+    background: radial-gradient(circle at 10% 20%, #122B24 0%, #091713 100%);
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    color: #FFFFFF;
+    display: flex;
+    flex-direction: column;
+    justifyContent: space-between;
+    padding: 60px 80px;
+    position: relative;
+    overflow: hidden;
+  }
+  /* Luxury Gold Borders & Accents */
+  body::before {
+    content: '';
+    position: absolute;
+    top: 24px; left: 24px; right: 24px; bottom: 24px;
+    border: 1.5px solid rgba(201, 168, 76, 0.35);
+    pointer-events: none;
+    border-radius: 12px;
+  }
+  body::after {
+    content: '';
+    position: absolute;
+    top: 30px; left: 30px; right: 30px; bottom: 30px;
+    border: 1px solid rgba(201, 168, 76, 0.15);
+    pointer-events: none;
+    border-radius: 8px;
+  }
+  .header {
+    display: flex;
+    justifyContent: space-between;
+    align-items: center;
+    border-bottom: 1px solid rgba(201, 168, 76, 0.25);
+    padding-bottom: 24px;
+    position: relative;
+    z-index: 10;
+  }
+  .brand {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+  .brand-emblem {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #C9A84C 0%, #8C6F2D 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Cinzel', serif;
+    font-weight: 800;
+    font-size: 24px;
+    color: #091713;
+    box-shadow: 0 4px 15px rgba(201, 168, 76, 0.4);
+  }
+  .brand-text {
+    font-family: 'Cinzel', serif;
+    font-size: 28px;
+    font-weight: 800;
+    letter-spacing: 0.15em;
+    color: #F4E8C1;
+  }
+  .badge {
+    background: rgba(201, 168, 76, 0.15);
+    border: 1px solid #C9A84C;
+    color: #F4E8C1;
+    padding: 8px 20px;
+    border-radius: 30px;
+    font-size: 14px;
+    font-weight: 800;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+  .slide-count {
+    font-size: 16px;
+    font-weight: 700;
+    color: rgba(201, 168, 76, 0.8);
+    letter-spacing: 0.05em;
+  }
+  .content {
+    display: flex;
+    flex-direction: column;
+    gap: 32px;
+    position: relative;
+    z-index: 10;
+    max-width: 1720px;
+    margin-top: 10px;
+  }
+  .category {
+    color: #C9A84C;
+    font-size: 16px;
+    font-weight: 800;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .category::before {
+    content: '';
+    display: inline-block;
+    width: 28px;
+    height: 2px;
+    background: #C9A84C;
+  }
+  .title {
+    font-family: 'Cinzel', serif;
+    font-size: 52px;
+    font-weight: 800;
+    color: #FFFFFF;
+    line-height: 1.15;
+    text-shadow: 0 4px 20px rgba(0,0,0,0.5);
+  }
+  .subtitle {
+    font-size: 24px;
+    font-weight: 500;
+    color: #DDD5C7;
+    margin-top: -12px;
+  }
+  .grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 32px;
+    margin-top: 12px;
+  }
+  .card {
+    background: rgba(18, 43, 36, 0.7);
+    border: 1px solid rgba(201, 168, 76, 0.3);
+    border-radius: 16px;
+    padding: 32px;
+    backdrop-filter: blur(10px);
+    box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+  }
+  .card-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 18px;
+    border-bottom: 1px solid rgba(255,255,255,0.1);
+    padding-bottom: 12px;
+  }
+  .card-icon {
+    font-size: 24px;
+  }
+  .card-title {
+    font-size: 18px;
+    font-weight: 800;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: #C9A84C;
+  }
+  .card-body {
+    font-size: 19px;
+    line-height: 1.6;
+    color: #E6E1D8;
+    white-space: pre-line;
+  }
+  .pro-tip {
+    background: linear-gradient(90deg, rgba(201, 168, 76, 0.12) 0%, rgba(201, 168, 76, 0.03) 100%);
+    border-left: 4px solid #C9A84C;
+    padding: 16px 24px;
+    border-radius: 0 12px 12px 0;
+    font-size: 18px;
+    color: #F4E8C1;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+  }
+  .footer {
+    display: flex;
+    justifyContent: space-between;
+    align-items: center;
+    border-top: 1px solid rgba(201, 168, 76, 0.25);
+    padding-top: 20px;
+    position: relative;
+    z-index: 10;
+  }
+  .live-pill {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: rgba(0, 0, 0, 0.4);
+    border: 1px solid rgba(201, 168, 76, 0.4);
+    padding: 8px 18px;
+    border-radius: 8px;
+    font-family: monospace;
+    font-size: 15px;
+    color: #6EE7B7;
+  }
+  .live-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: #10B981;
+    box-shadow: 0 0 10px #10B981;
+  }
+  .confidential {
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 0.15em;
+    color: rgba(201, 168, 76, 0.7);
+    text-transform: uppercase;
+  }
+</style>
+</head>
+<body>
+  <div class="header">
+    <div class="brand">
+      <div class="brand-emblem">D</div>
+      <div class="brand-text">DAROODI HAUTE COUTURE</div>
+    </div>
+    <div class="badge">SUPER ADMIN MASTER PRESENTATION</div>
+    <div class="slide-count">7 / 17</div>
+  </div>
+
+  <div class="content">
+    <div>
+      <div class="category">ADMIN TAB 4 / 13</div>
+      <h1 class="title">Bespoke Orders & Client Measurements Matrix</h1>
+      <div class="subtitle">Tailoring Stages, Custom Sizing & WhatsApp Dispatch</div>
+    </div>
+
+    <div class="grid">
+      <div class="card">
+        <div class="card-header">
+          <span class="card-icon">💎</span>
+          <span class="card-title">What It Is &amp; Core Purpose</span>
+        </div>
+        <div class="card-body">The heartbeat of the Daroodi atelier. Tracks every bespoke client commission, custom body measurements (chest, waist, hip, shoulder, sleeves, height), and active production stages.</div>
+      </div>
+
+      <div class="card">
+        <div class="card-header">
+          <span class="card-icon">⚡</span>
+          <span class="card-title">What To Do &amp; Key Operational Actions</span>
+        </div>
+        <div class="card-body">• View client bespoke orders and check exact client body measurements.
+• Advance orders through tailoring stages: Consultation → Fabric Cutting → Hand Embroidery → Fitting → Dispatched.
+• Click direct WhatsApp buttons to contact clients with live production updates and tracking numbers.</div>
+      </div>
+    </div>
+
+    <div class="pro-tip">
+      <span>💡</span>
+      <span><strong>Operational Pro-Tip:</strong> Always verify client measurements with the master tailor before advancing orders to the Fabric Cutting stage.</span>
+    </div>
+  </div>
+
+  <div class="footer">
+    <div class="live-pill">
+      <div class="live-dot"></div>
+      <span>Target: https://www.daroodi.com/admin/orders</span>
+    </div>
+    <div class="confidential">Strictly Confidential — Authorized Atelier Personnel Only</div>
+  </div>
+</body>
+</html>
