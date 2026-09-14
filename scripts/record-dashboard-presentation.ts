@@ -463,11 +463,12 @@ async function recordPresentation() {
     const sections = [
       { name: 'Overview', url: '/admin', duration: 5000 },
       { name: 'Products', url: '/admin/products', duration: 6000 },
-      { name: 'Collections', url: '/admin/collections', duration: 5000 },
       { name: 'Orders', url: '/admin/orders', duration: 6000 },
-      { name: 'Journal (Blog)', url: '/admin/journal', duration: 6000 },
-      { name: 'Pages CMS', url: '/admin/pages', duration: 5000 },
-      { name: 'Analytics', url: '/admin/analytics', duration: 6000 },
+      { name: 'Blog Posts (Journal CMS)', url: '/admin/posts', duration: 6000 },
+      { name: 'Storefront Pages CMS', url: '/admin/pages', duration: 5000 },
+      { name: 'Reviews & Q&A', url: '/admin/cms', duration: 4000 },
+      { name: 'Visitor Analytics', url: '/admin/analytics', duration: 6000 },
+      { name: 'Tracking & Integrations', url: '/admin/settings', duration: 5000 },
       { name: 'Users', url: '/admin/users', duration: 5000 },
       { name: 'Finance', url: '/admin/finance', duration: 5000 },
       { name: 'My Sales', url: '/admin/my-sales', duration: 4000 },
@@ -492,9 +493,10 @@ async function recordPresentation() {
     const storefrontPages = [
       { name: 'Homepage', url: '/', duration: 6000 },
       { name: 'Shop', url: '/shop', duration: 6000 },
-      { name: 'Product Detail', url: '/shop/mens-premium-prince-coat', duration: 5000 },
+      { name: 'Product Detail', url: '/shop/mens-midnight-navy-velvet-duster-coat', duration: 5000 },
       { name: 'Journal', url: '/journal', duration: 5000 },
       { name: 'Journal Post', url: '/journal/what-is-zardozi-hand-embroidery-the-definitive-guide', duration: 5000 },
+      { name: 'Collections', url: '/collections', duration: 4000 },
       { name: 'Track Order', url: '/track-order', duration: 4000 },
       { name: 'Contact', url: '/contact', duration: 4000 },
     ];

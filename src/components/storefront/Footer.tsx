@@ -111,9 +111,9 @@ export const Footer: React.FC = () => {
                 <h4>Get in Touch</h4>
                 <ul>
                   <li><a href="mailto:info@daroodi.com">info@daroodi.com</a></li>
-                  <li><a href="tel:+923001215532">+92 300 1215532</a></li>
+                  <li><a href="tel:+447440437493">+44 7440 4374 93</a></li>
                   <li><Link href="/contact">Private Consultation</Link></li>
-                  <li><a href="https://wa.me/923001215532" target="_blank" rel="noopener noreferrer">WhatsApp Concierge</a></li>
+                  <li><a href="https://wa.me/447440437493" target="_blank" rel="noopener noreferrer">WhatsApp Concierge</a></li>
                 </ul>
                 <p className="footer-hours">Mon–Sat · Replies within 24 hrs</p>
               </div>

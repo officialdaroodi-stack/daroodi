@@ -253,7 +253,38 @@ async function main() {
 
   if (found) {
     console.log(`  ✓ User ${adminEmail} already exists (id ${found.id})`);
-    console.log('    → Make sure their profile has role super_admin in the profiles table.');
+
+    // If an explicit password is configured, sync it so the operator's
+    // chosen credentials always work (idempotent re-runs).
+    if (process.env.ADMIN_INITIAL_PASSWORD) {
+      const { error: pwErr } = await supabase.auth.admin.updateUserById(found.id, {
+        password: process.env.ADMIN_INITIAL_PASSWORD,
+        email_confirm: true,
+      });
+      if (pwErr) {
+        console.warn(`    ⚠ Could not reset password: ${pwErr.message}`);
+      } else {
+        console.log('    ✓ Password synced from ADMIN_INITIAL_PASSWORD');
+      }
+    }
+
+    // Ensure the profile exists and has the super_admin role
+    const { error: roleErr } = await supabase
+      .from('profiles')
+      .upsert(
+        {
+          id: found.id,
+          email: adminEmail,
+          full_name: 'Sarmad Daroodi (Chief Maison Master)',
+          role: 'super_admin',
+        },
+        { onConflict: 'id' }
+      );
+    if (roleErr) {
+      console.warn(`    ⚠ Could not promote profile role: ${roleErr.message}`);
+    } else {
+      console.log('    ✓ Profile role confirmed: super_admin');
+    }
   } else {
     const { data, error } = await supabase.auth.admin.createUser({
       email: adminEmail,
