@@ -41,6 +41,7 @@ export function AdminShell({ user, children }: AdminShellProps) {
   const router = useRouter();
   const role = user.role;
   const [mobileOpen, setMobileOpen] = useState(false);
+  const [isCollapsed, setIsCollapsed] = useState(false);
 
   const handleSignOut = async () => {
     const supabase = createClient();
@@ -49,13 +50,32 @@ export function AdminShell({ user, children }: AdminShellProps) {
     router.refresh();
   };
 
+  const handleToggleSidebar = () => {
+    if (typeof window !== 'undefined' && window.innerWidth <= 768) {
+      setMobileOpen((v) => !v);
+    } else {
+      setIsCollapsed((v) => !v);
+    }
+  };
+
   return (
-    <div className="admin-layout">
+    <div className={`admin-layout ${isCollapsed ? 'sidebar-collapsed' : ''}`}>
+      {/* Mobile backdrop */}
+      {mobileOpen && (
+        <div
+          onClick={() => setMobileOpen(false)}
+          style={{
+            position: 'fixed',
+            inset: 0,
+            background: 'rgba(0, 0, 0, 0.5)',
+            zIndex: 999,
+          }}
+          aria-hidden="true"
+        />
+      )}
+
       <aside
-        className="admin-sidebar"
-        style={{
-          transform: mobileOpen ? 'translateX(0)' : undefined,
-        }}
+        className={`admin-sidebar ${isCollapsed ? 'collapsed' : ''} ${mobileOpen ? 'mobile-open' : ''}`}
       >
         <div className="sidebar-brand">
           <div className="logo-emblem">
@@ -72,6 +92,7 @@ export function AdminShell({ user, children }: AdminShellProps) {
             href="/admin"
             className={`sidebar-link ${pathname === '/admin' ? 'active' : ''}`}
             onClick={() => setMobileOpen(false)}
+            title="Overview & KPIs"
           >
             <LayoutDashboard size={18} />
             <span>Overview & KPIs</span>
@@ -84,6 +105,7 @@ export function AdminShell({ user, children }: AdminShellProps) {
                 href="/admin/users"
                 className={`sidebar-link ${pathname === '/admin/users' ? 'active' : ''}`}
                 onClick={() => setMobileOpen(false)}
+                title="User Hierarchy & Roles"
               >
                 <Users size={18} />
                 <span>User Hierarchy & Roles</span>
@@ -98,6 +120,7 @@ export function AdminShell({ user, children }: AdminShellProps) {
                 href="/admin/products"
                 className={`sidebar-link ${pathname.startsWith('/admin/products') ? 'active' : ''}`}
                 onClick={() => setMobileOpen(false)}
+                title="Products & ACF Specs"
               >
                 <Package size={18} />
                 <span>Products & ACF Specs</span>
@@ -110,6 +133,7 @@ export function AdminShell({ user, children }: AdminShellProps) {
               href="/admin/orders"
               className={`sidebar-link ${pathname.startsWith('/admin/orders') ? 'active' : ''}`}
               onClick={() => setMobileOpen(false)}
+              title="Orders & Measurements"
             >
               <ShoppingBag size={18} />
               <span>Orders & Measurements</span>
@@ -123,6 +147,7 @@ export function AdminShell({ user, children }: AdminShellProps) {
                 href="/admin/finance"
                 className={`sidebar-link ${pathname === '/admin/finance' ? 'active' : ''}`}
                 onClick={() => setMobileOpen(false)}
+                title="Revenue & Analytics"
               >
                 <DollarSign size={18} />
                 <span>Revenue & Analytics</span>
@@ -131,6 +156,7 @@ export function AdminShell({ user, children }: AdminShellProps) {
                 href="/admin/finance/payouts"
                 className={`sidebar-link ${pathname === '/admin/finance/payouts' ? 'active' : ''}`}
                 onClick={() => setMobileOpen(false)}
+                title="Commission Approvals"
               >
                 <TrendingUp size={18} />
                 <span>Commission Approvals</span>
@@ -145,6 +171,7 @@ export function AdminShell({ user, children }: AdminShellProps) {
                 href="/admin/marketing"
                 className={`sidebar-link ${pathname === '/admin/marketing' ? 'active' : ''}`}
                 onClick={() => setMobileOpen(false)}
+                title="Global Campaigns"
               >
                 <Globe size={18} />
                 <span>Global Campaigns</span>
@@ -153,6 +180,7 @@ export function AdminShell({ user, children }: AdminShellProps) {
                 href="/admin/marketing/country-managers"
                 className={`sidebar-link ${pathname === '/admin/marketing/country-managers' ? 'active' : ''}`}
                 onClick={() => setMobileOpen(false)}
+                title="Country Heads & Agents"
               >
                 <Users size={18} />
                 <span>Country Heads & Agents</span>
@@ -167,6 +195,7 @@ export function AdminShell({ user, children }: AdminShellProps) {
                 href="/admin/my-sales"
                 className={`sidebar-link ${pathname === '/admin/my-sales' ? 'active' : ''}`}
                 onClick={() => setMobileOpen(false)}
+                title="My Commissions & Links"
               >
                 <TrendingUp size={18} />
                 <span>My Commissions & Links</span>
@@ -181,6 +210,7 @@ export function AdminShell({ user, children }: AdminShellProps) {
                 href="/admin/posts"
                 className={`sidebar-link ${pathname.startsWith('/admin/posts') ? 'active' : ''}`}
                 onClick={() => setMobileOpen(false)}
+                title="Blog Posts"
               >
                 <BookOpen size={18} />
                 <span>Blog Posts</span>
@@ -189,6 +219,7 @@ export function AdminShell({ user, children }: AdminShellProps) {
                 href="/admin/pages"
                 className={`sidebar-link ${pathname.startsWith('/admin/pages') ? 'active' : ''}`}
                 onClick={() => setMobileOpen(false)}
+                title="Storefront Pages"
               >
                 <FileText size={18} />
                 <span>Storefront Pages</span>
@@ -197,6 +228,7 @@ export function AdminShell({ user, children }: AdminShellProps) {
                 href="/admin/cms"
                 className={`sidebar-link ${pathname === '/admin/cms' ? 'active' : ''}`}
                 onClick={() => setMobileOpen(false)}
+                title="Reviews & Q&A"
               >
                 <Sparkles size={18} />
                 <span>Reviews &amp; Q&amp;A</span>
@@ -209,6 +241,7 @@ export function AdminShell({ user, children }: AdminShellProps) {
             href="/admin/analytics"
             className={`sidebar-link ${pathname === '/admin/analytics' ? 'active' : ''}`}
             onClick={() => setMobileOpen(false)}
+            title="Visitor Analytics"
           >
             <BarChart3 size={18} />
             <span>Visitor Analytics</span>
@@ -221,6 +254,7 @@ export function AdminShell({ user, children }: AdminShellProps) {
                 href="/admin/settings"
                 className={`sidebar-link ${pathname === '/admin/settings' ? 'active' : ''}`}
                 onClick={() => setMobileOpen(false)}
+                title="Tracking & Integrations"
               >
                 <Plug size={18} />
                 <span>Tracking &amp; Integrations</span>
@@ -248,11 +282,12 @@ export function AdminShell({ user, children }: AdminShellProps) {
         <header className="admin-topbar">
           <button
             type="button"
-            onClick={() => setMobileOpen((v) => !v)}
+            onClick={handleToggleSidebar}
             className="admin-mobile-menu-btn"
-            aria-label="Toggle menu"
+            aria-label="Toggle sidebar"
+            title={isCollapsed ? 'Expand sidebar' : 'Collapse sidebar'}
           >
-            {mobileOpen ? <X size={20} /> : <Menu size={20} />}
+            <Menu size={20} />
           </button>
           <div>
             <strong style={{ fontSize: '1.05rem', color: 'var(--green-900)' }}>{user.full_name || user.email}</strong>

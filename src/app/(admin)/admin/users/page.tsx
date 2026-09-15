@@ -29,7 +29,71 @@ export default function UsersManagementPage() {
   const [newCountry, setNewCountry] = useState('UK');
   const [newRegion, setNewRegion] = useState('');
 
+  // Edit user state
+  const [editingUser, setEditingUser] = useState<UserProfile | null>(null);
+  const [editFullName, setEditFullName] = useState('');
+  const [editEmail, setEditEmail] = useState('');
+  const [editRole, setEditRole] = useState<UserRole>('admin');
+  const [editPassword, setEditPassword] = useState('');
+  const [editCountry, setEditCountry] = useState('');
+  const [editRegion, setEditRegion] = useState('');
+  const [editCommissionRate, setEditCommissionRate] = useState<number>(10);
+  const [editPhone, setEditPhone] = useState('');
+  const [savingEdit, setSavingEdit] = useState(false);
+
   const [successMessage, setSuccessMessage] = useState<{ name: string; role: UserRole; email: string; password: string } | null>(null);
+
+  const openEditModal = (user: UserProfile) => {
+    setEditingUser(user);
+    setEditFullName(user.full_name || '');
+    setEditEmail(user.email || '');
+    setEditRole(user.role || 'customer');
+    setEditPassword('');
+    setEditCountry(user.assigned_country || '');
+    setEditRegion(user.assigned_region || '');
+    setEditCommissionRate(user.commission_rate !== undefined && user.commission_rate !== null ? Math.round(user.commission_rate * 100) : 10);
+    setEditPhone(user.phone || '');
+  };
+
+  const handleEditSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!editingUser) return;
+    setSavingEdit(true);
+
+    try {
+      const payload: any = {
+        full_name: editFullName.trim(),
+        email: editEmail.trim(),
+        role: editRole,
+        assigned_country: editCountry.trim() || null,
+        assigned_region: editRegion.trim() || null,
+        commission_rate: Number(editCommissionRate) / 100,
+        phone: editPhone.trim() || null,
+      };
+      if (editPassword && editPassword.trim().length >= 8) {
+        payload.password = editPassword.trim();
+      }
+
+      const res = await fetch(`/api/admin/users/${editingUser.id}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload),
+      });
+
+      if (!res.ok) {
+        const json = await res.json().catch(() => ({}));
+        alert(`Failed to update user: ${json.error || res.statusText}`);
+        return;
+      }
+
+      setEditingUser(null);
+      await loadData();
+    } catch (err: any) {
+      alert(`Failed to update user: ${err?.message || 'Network error'}`);
+    } finally {
+      setSavingEdit(false);
+    }
+  };
 
   const loadData = async () => {
     setLoading(true);
@@ -236,17 +300,27 @@ export default function UsersManagementPage() {
                         {user.commission_rate ? `${(user.commission_rate * 100).toFixed(0)}%` : 'N/A (Salary)'}
                       </td>
                       <td>
-                        <select
-                          value={user.role}
-                          onChange={(e) => handleRoleChange(user.id, e.target.value as UserRole)}
-                          style={{ padding: '6px 10px', borderRadius: '6px', border: '1px solid var(--cream-300)', fontSize: '0.75rem', background: 'var(--cream-50)' }}
-                        >
-                          {ROLES.map((r) => (
-                            <option key={r} value={r}>
-                              {getRoleDisplayName(r)}
-                            </option>
-                          ))}
-                        </select>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                          <button
+                            onClick={() => openEditModal(user)}
+                            className="btn-3d-secondary"
+                            style={{ padding: '6px 12px', fontSize: '0.75rem', display: 'inline-flex', alignItems: 'center', gap: '4px' }}
+                            title="Edit user details"
+                          >
+                            <Edit2 size={13} /> Edit
+                          </button>
+                          <select
+                            value={user.role}
+                            onChange={(e) => handleRoleChange(user.id, e.target.value as UserRole)}
+                            style={{ padding: '6px 10px', borderRadius: '6px', border: '1px solid var(--cream-300)', fontSize: '0.75rem', background: 'var(--cream-50)' }}
+                          >
+                            {ROLES.map((r) => (
+                              <option key={r} value={r}>
+                                {getRoleDisplayName(r)}
+                              </option>
+                            ))}
+                          </select>
+                        </div>
                       </td>
                     </tr>
                   );
@@ -322,6 +396,150 @@ export default function UsersManagementPage() {
                 <button
                   type="button"
                   onClick={() => setShowCreateModal(false)}
+                  className="btn-3d-secondary"
+                  style={{ padding: '12px 20px' }}
+                >
+                  Cancel
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+
+      {/* Modal: Edit User Details */}
+      {editingUser && (
+        <div style={{ position: 'fixed', inset: 0, background: 'rgba(15, 36, 30, 0.55)', backdropFilter: 'blur(4px)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 9999, padding: '20px' }}>
+          <div style={{ background: 'var(--white)', padding: '32px', borderRadius: 'var(--radius-xl)', maxWidth: '540px', width: '100%', boxShadow: '0 20px 50px rgba(0,0,0,0.25)', maxHeight: '90vh', overflowY: 'auto' }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
+              <div>
+                <h2 style={{ fontSize: '1.5rem', color: 'var(--green-900)', margin: 0 }}>Edit User Details</h2>
+                <span style={{ fontSize: '0.78rem', color: 'var(--slate-500)' }}>ID: {editingUser.id}</span>
+              </div>
+              <button
+                type="button"
+                onClick={() => setEditingUser(null)}
+                style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--slate-500)', fontSize: '1.4rem', lineHeight: 1 }}
+                aria-label="Close"
+              >
+                ✕
+              </button>
+            </div>
+
+            <form onSubmit={handleEditSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
+              <div>
+                <label style={{ fontSize: '0.82rem', fontWeight: 700 }}>Full Name</label>
+                <input
+                  type="text"
+                  required
+                  placeholder="e.g. Admin"
+                  value={editFullName}
+                  onChange={(e) => setEditFullName(e.target.value)}
+                  style={{ width: '100%', padding: '10px', borderRadius: '8px', border: '1px solid var(--cream-300)', marginTop: '4px' }}
+                />
+              </div>
+
+              <div>
+                <label style={{ fontSize: '0.82rem', fontWeight: 700 }}>Email Address</label>
+                <input
+                  type="email"
+                  required
+                  placeholder="e.g. admin@daroodi.com"
+                  value={editEmail}
+                  onChange={(e) => setEditEmail(e.target.value)}
+                  style={{ width: '100%', padding: '10px', borderRadius: '8px', border: '1px solid var(--cream-300)', marginTop: '4px' }}
+                />
+              </div>
+
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
+                <div>
+                  <label style={{ fontSize: '0.82rem', fontWeight: 700 }}>Role Assignment</label>
+                  <select
+                    value={editRole}
+                    onChange={(e) => setEditRole(e.target.value as UserRole)}
+                    style={{ width: '100%', padding: '10px', borderRadius: '8px', border: '1px solid var(--cream-300)', marginTop: '4px', background: 'var(--cream-50)' }}
+                  >
+                    {ROLES.map((r) => (
+                      <option key={r} value={r}>{getRoleDisplayName(r)}</option>
+                    ))}
+                  </select>
+                </div>
+                <div>
+                  <label style={{ fontSize: '0.82rem', fontWeight: 700 }}>Commission Rate (%)</label>
+                  <input
+                    type="number"
+                    min="0"
+                    max="100"
+                    step="1"
+                    placeholder="e.g. 10"
+                    value={editCommissionRate}
+                    onChange={(e) => setEditCommissionRate(Number(e.target.value))}
+                    style={{ width: '100%', padding: '10px', borderRadius: '8px', border: '1px solid var(--cream-300)', marginTop: '4px' }}
+                  />
+                </div>
+              </div>
+
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
+                <div>
+                  <label style={{ fontSize: '0.82rem', fontWeight: 700 }}>Assigned Country / HQ</label>
+                  <input
+                    type="text"
+                    placeholder="e.g. UK, UAE, Pakistan, Global"
+                    value={editCountry}
+                    onChange={(e) => setEditCountry(e.target.value)}
+                    style={{ width: '100%', padding: '10px', borderRadius: '8px', border: '1px solid var(--cream-300)', marginTop: '4px' }}
+                  />
+                </div>
+                <div>
+                  <label style={{ fontSize: '0.82rem', fontWeight: 700 }}>Assigned Region</label>
+                  <input
+                    type="text"
+                    placeholder="e.g. London, Dubai, Punjab"
+                    value={editRegion}
+                    onChange={(e) => setEditRegion(e.target.value)}
+                    style={{ width: '100%', padding: '10px', borderRadius: '8px', border: '1px solid var(--cream-300)', marginTop: '4px' }}
+                  />
+                </div>
+              </div>
+
+              <div>
+                <label style={{ fontSize: '0.82rem', fontWeight: 700 }}>Phone / WhatsApp Number</label>
+                <input
+                  type="text"
+                  placeholder="e.g. +44 7440 4374 93"
+                  value={editPhone}
+                  onChange={(e) => setEditPhone(e.target.value)}
+                  style={{ width: '100%', padding: '10px', borderRadius: '8px', border: '1px solid var(--cream-300)', marginTop: '4px' }}
+                />
+              </div>
+
+              <div>
+                <label style={{ fontSize: '0.82rem', fontWeight: 700 }}>Change Password</label>
+                <input
+                  type="text"
+                  placeholder="Leave blank to keep current password"
+                  value={editPassword}
+                  onChange={(e) => setEditPassword(e.target.value)}
+                  style={{ width: '100%', padding: '10px', borderRadius: '8px', border: '1px solid var(--cream-300)', marginTop: '4px', fontFamily: 'monospace' }}
+                />
+                <span style={{ fontSize: '0.72rem', color: 'var(--slate-500)', marginTop: '4px', display: 'block' }}>
+                  Must be at least 8 characters if setting a new password.
+                </span>
+              </div>
+
+              <div style={{ display: 'flex', gap: '10px', marginTop: '16px' }}>
+                <button
+                  type="submit"
+                  disabled={savingEdit}
+                  className="btn-3d-primary"
+                  style={{ flex: 1, padding: '12px', justifyContent: 'center' }}
+                >
+                  {savingEdit ? 'Saving Changes…' : 'Save Changes'}
+                </button>
+                <button
+                  type="button"
+                  disabled={savingEdit}
+                  onClick={() => setEditingUser(null)}
                   className="btn-3d-secondary"
                   style={{ padding: '12px 20px' }}
                 >

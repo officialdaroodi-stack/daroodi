@@ -43,7 +43,7 @@ export async function getCurrentUser(): Promise<AuthUser | null> {
     return {
       id: user.id,
       email: user.email ?? '',
-      full_name: user.user_metadata?.full_name ?? (isAdminEmail ? 'Sarmad Daroodi (Chief Maison Master)' : ''),
+      full_name: user.user_metadata?.full_name ?? (isAdminEmail ? 'Admin' : ''),
       role: isAdminEmail ? 'super_admin' : 'customer',
     };
   }

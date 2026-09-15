@@ -275,7 +275,7 @@ async function main() {
         {
           id: found.id,
           email: adminEmail,
-          full_name: 'Sarmad Daroodi (Chief Maison Master)',
+          full_name: 'Admin',
           role: 'super_admin',
         },
         { onConflict: 'id' }
@@ -290,7 +290,7 @@ async function main() {
       email: adminEmail,
       password,
       email_confirm: true,
-      user_metadata: { full_name: 'Sarmad Daroodi (Chief Maison Master)' },
+      user_metadata: { full_name: 'Admin' },
     });
     if (error) throw error;
 
@@ -300,7 +300,7 @@ async function main() {
       .from('profiles')
       .update({
         role: 'super_admin',
-        full_name: 'Sarmad Daroodi (Chief Maison Master)',
+        full_name: 'Admin',
         email: adminEmail,
       })
       .eq('id', data.user!.id);
